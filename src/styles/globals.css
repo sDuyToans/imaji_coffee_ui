@@ -62,6 +62,7 @@
     --color-white: #FFFFFF;
     /*NEUTRAL COLORS*/
 
+
     /*FONTS SIZE && LINE HEIGHT*/
     --text-xs: 12px;
     --text-xs--line-height: 16px;
@@ -119,4 +120,21 @@
     --rounded-full: 9999px;
     /*BORDER RADIUS*/
 }
+
+.active {
+    position: relative;
+}
+
+.active::after {
+    content: "";
+    position: absolute;
+    bottom: -50%;
+    left: 50%;
+    width: 50%;
+    transform: translateX(-50%);
+    height: 10%;
+    background-color: #A27B5C;
+}
+
+
 @config "../../tailwind.config.js"

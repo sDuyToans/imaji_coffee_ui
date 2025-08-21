@@ -6,8 +6,16 @@ import { Icon } from "@/components/layouts/icons.tsx";
 
 export default function Footer(): ReactElement {
   return (
-    <div className={"w-full mx-auto bg-black text-white py-[56px] px-[20px]"}>
-      <div className={"flex flex-col gap-[80px] px-[100px]"}>
+    <div
+      className={
+        "w-full mx-auto bg-black text-white px-[20px] py-[48px] lg:py-[56px]"
+      }
+    >
+      <div
+        className={
+          "flex flex-col gap-[80px] lg:px-[100px] items-center justify-center"
+        }
+      >
         <TopFooter />
         <BotFooter />
       </div>
@@ -35,8 +43,10 @@ function BotFooter(): ReactElement {
 function TopFooter(): ReactElement {
   return (
     <div className={"flex flex-col items-center gap-[32px] w-full"}>
-      <h1 className={"text-6xl"}>Our Location</h1>
-      <div className={"flex flex-col gap-3 items-center text-xl"}>
+      <h1 className={"text-5xl lg:text-6xl"}>Our Location</h1>
+      <div
+        className={"flex flex-col gap-3 items-center text-[16px] lg:text-xl"}
+      >
         <h5>Jl. Bangkringan No 19, RT.11/RW.2, Kota Surabaya, 60124</h5>
         <h5>
           <b>Customer Service</b> +6282-2876-6862
@@ -47,7 +57,7 @@ function TopFooter(): ReactElement {
       </div>
       <div
         className={
-          "border-t-1 border-light-grey-40 pt-[32px] flex items-center justify-between w-full"
+          "border-t-1 border-light-grey-40 pt-[32px] flex flex-col gap-[32px] lg:flex-row items-center justify-between w-full"
         }
       >
         <div className={"flex items-center gap-[24px]"}>
@@ -70,14 +80,24 @@ function TopFooter(): ReactElement {
             <Icon name={"telegram"} />
           </Link>
         </div>
-        <div className={"flex gap-[24px] items-center"}>
+        <div className={"flex flex-col md:flex-row gap-[24px] items-center"}>
           <h6 className={"text-lg"}>Delivery Order</h6>
-          <Link href={"#"}>
-            <Image alt={"app_store"} src={"/footer/logo_app_store.png"} />
-          </Link>
-          <Link href={"#"}>
-            <Image alt={"app_store"} src={"/footer/google_play.png"} />
-          </Link>
+          <div className={"flex flex-row gap-6"}>
+            <Link href={"#"}>
+              <Image
+                alt={"app_store"}
+                className={"rounded-none"}
+                src={"/footer/logo_app_store.png"}
+              />
+            </Link>
+            <Link href={"#"}>
+              <Image
+                alt={"app_store"}
+                className={"rounded-none"}
+                src={"/footer/google_play.png"}
+              />
+            </Link>
+          </div>
         </div>
       </div>
     </div>

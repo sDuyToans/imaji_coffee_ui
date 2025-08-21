@@ -3,8 +3,8 @@ import { VisuallyHidden } from "@react-aria/visually-hidden";
 import { SwitchProps, useSwitch } from "@heroui/switch";
 import clsx from "clsx";
 import { useTheme } from "@heroui/use-theme";
-
-import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
+import { FaMoon } from "react-icons/fa";
+import { IoSunnyOutline } from "react-icons/io5";
 
 export interface ThemeSwitchProps {
   className?: string;
@@ -72,9 +72,9 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
         })}
       >
         {isSelected ? (
-          <MoonFilledIcon size={22} />
+          <FaMoon size={22} />
         ) : (
-          <SunFilledIcon size={22} />
+          <IoSunnyOutline className={"dark:text-black"} size={22} />
         )}
       </div>
     </Component>
