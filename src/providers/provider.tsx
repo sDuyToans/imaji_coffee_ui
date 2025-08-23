@@ -10,7 +10,7 @@ declare module "@react-types/shared" {
   }
 }
 
-export function Provider({
+export function HeroUiProvider({
   children,
 }: {
   children: React.ReactNode;

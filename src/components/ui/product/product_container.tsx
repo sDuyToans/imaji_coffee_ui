@@ -16,7 +16,7 @@ export default function ProductContainer({
     >
       {products.map(
         (p: ProductItem): ReactElement => (
-          <ProductItemCard key={p.id} product={p} />
+          <ProductItemCard key={p.productId} product={p} />
         ),
       )}
     </div>

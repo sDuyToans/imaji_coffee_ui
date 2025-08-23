@@ -26,7 +26,13 @@ export default function CustomCarousel(props: PropsType): React.ReactElement {
 
   options = { ...options, loop: isLoop };
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [
-    AutoScroll({ playOnInit: true }),
+    AutoScroll({
+      playOnInit: true,
+      speed: 2, // try values: 2 → slow, 4 → medium, 6 → fast
+      startDelay: 0, // no delay before scrolling starts
+      stopOnInteraction: false, // don’t stop if user clicks next/prev
+      stopOnMouseEnter: false, // don’t pause on hover
+    }),
   ]);
   const {
     prevBtnDisabled,

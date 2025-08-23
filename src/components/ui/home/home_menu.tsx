@@ -1,11 +1,15 @@
 import { ReactElement } from "react";
+import { Spinner } from "@heroui/spinner";
 
 import PageHeading from "@/components/ui/page_heading.tsx";
 import { ProductItem } from "@/types";
 import ProductContainer from "@/components/ui/product/product_container.tsx";
 import PrimaryLink from "@/components/ui/button/primary_link.tsx";
+import { useGetProductsQuery } from "@/api/products/productsApi.ts";
 
 export default function HomeMenu(): ReactElement {
+  const { data: products, isLoading } = useGetProductsQuery();
+
   return (
     <div
       className={
@@ -13,7 +17,11 @@ export default function HomeMenu(): ReactElement {
       }
     >
       <MenuTitle />
-      <MenuContent />
+      {isLoading ? (
+        <Spinner color={"primary"} />
+      ) : (
+        <MenuContent products={products ?? []} />
+      )}
     </div>
   );
 }
@@ -31,46 +39,7 @@ function MenuTitle(): ReactElement {
   );
 }
 
-function MenuContent(): ReactElement {
-  let products: ProductItem[] = [
-    {
-      id: 1,
-      name: "Ristretto Bianco",
-      price: 5.0,
-      oldPrice: 6.0,
-      isAvailableAtWeb: false,
-      images: ["/home/menu/Sections/Image1.png"],
-      description: "a",
-    },
-    {
-      id: 2,
-      name: "French toast WITH SUGAR ",
-      price: 5.0,
-      oldPrice: 6.0,
-      isAvailableAtWeb: false,
-      images: ["/home/menu/Sections/Image2.png"],
-      description: "a",
-    },
-    {
-      id: 3,
-      name: "AT HOME HOUSE BLEND",
-      price: 5.0,
-      oldPrice: 6.0,
-      isAvailableAtWeb: true,
-      images: ["/home/menu/Sections/Image3.png"],
-      description: "a",
-    },
-    {
-      id: 4,
-      name: "AT HOME HOUSE classic",
-      price: 5.0,
-      oldPrice: 6.0,
-      isAvailableAtWeb: true,
-      images: ["/home/menu/Sections/Image4.png"],
-      description: "a",
-    },
-  ];
-
+function MenuContent({ products }: { products: ProductItem[] }): ReactElement {
   return (
     <div>
       <ProductContainer products={products} />

@@ -10,6 +10,7 @@ export default function ProductItemCard({
   product: ProductItem;
 }): ReactElement {
   const { name, price, images, oldPrice, isAvailableAtWeb } = product;
+  const heroImgUrl: string = images[0].imageUrl;
 
   function getDiscountPercentage(product: ProductItem): number {
     if (product.oldPrice <= 0 || product.oldPrice <= product.price) {
@@ -33,7 +34,7 @@ export default function ProductItemCard({
           }}
           radius={"lg"}
           shadow={"none"}
-          src={images[0]}
+          src={heroImgUrl}
           width={"100%"}
         />
         {salePercentage > 0 && (
