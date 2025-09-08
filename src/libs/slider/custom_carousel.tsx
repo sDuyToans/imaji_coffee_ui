@@ -28,7 +28,7 @@ export default function CustomCarousel(props: PropsType): React.ReactElement {
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [
     AutoScroll({
       playOnInit: true,
-      speed: 2, // try values: 2 → slow, 4 → medium, 6 → fast
+      speed: 1, // try values: 2 → slow, 4 → medium, 6 → fast
       startDelay: 0, // no delay before scrolling starts
       stopOnInteraction: false, // don’t stop if user clicks next/prev
       stopOnMouseEnter: false, // don’t pause on hover
@@ -70,8 +70,8 @@ export default function CustomCarousel(props: PropsType): React.ReactElement {
       <div ref={emblaRef} className="embla__viewport">
         <div className="embla__container">
           {slides.map(
-            (s: SliderItem): ReactElement => (
-              <div key={s.id} className="embla__slide">
+            (s: SliderItem, index: number): ReactElement => (
+              <div key={index} className="embla__slide">
                 <div className="embla__slide__number">
                   <SliderItemCard descPos={pos} item={s} />
                 </div>

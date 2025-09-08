@@ -1,8 +1,9 @@
 import { ReactElement } from "react";
+import { Spinner } from "@heroui/spinner";
 
 import PageHeading from "@/components/ui/page_heading.tsx";
 import CustomCarousel from "@/libs/slider/custom_carousel.tsx";
-import { SliderItem } from "@/types";
+import { useGetSpacesQuery } from "@/api/spaces/spacesApi.ts";
 
 export default function HomeSpace(): ReactElement {
   return (
@@ -30,60 +31,14 @@ function SpaceTitle(): ReactElement {
 }
 
 function SpaceContent(): ReactElement {
-  let spaces: SliderItem[] = [
-    {
-      id: 1,
-      name: "white wall",
-      type: "workspace",
-      image: "/home/space/Sections/Image1.png",
-    },
-    {
-      id: 2,
-      name: "long window",
-      type: "workspace",
-      image: "/home/space/Sections/Image2.png",
-    },
-    {
-      id: 3,
-      name: "gengs space",
-      type: "workspace",
-      image: "/home/space/Sections/Image3.png",
-    },
-    {
-      id: 4,
-      name: "seminar area",
-      type: "event space",
-      image: "/home/space/Sections/Image4.png",
-    },
-    {
-      id: 5,
-      name: "center area",
-      type: "event space",
-      image: "/home/space/Sections/Image5.png",
-    },
-    {
-      id: 6,
-      name: "aquarium",
-      type: "meeting space",
-      image: "/home/space/Sections/Image6.png",
-    },
-    {
-      id: 7,
-      name: "roftop",
-      type: "workspace",
-      image: "/home/space/Sections/Image7.png",
-    },
-    {
-      id: 8,
-      name: "hamble space",
-      type: "meeting space",
-      image: "/home/space/Sections/Image8.png",
-    },
-  ];
+  const { data: spaces, isLoading } = useGetSpacesQuery();
 
   return (
     <div>
-      <CustomCarousel isLoop={true} isShowControl={true} slides={spaces} />
+      {isLoading && <Spinner color={"primary"} />}
+      {spaces && (
+        <CustomCarousel isLoop={true} isShowControl={true} slides={spaces} />
+      )}
     </div>
   );
 }

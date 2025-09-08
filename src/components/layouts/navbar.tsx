@@ -11,14 +11,22 @@ import {
 import { ReactElement } from "react";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { siteConfig } from "@/config/site.ts";
 import { ThemeSwitch } from "@/components/theme-switch.tsx";
 import Logo from "@/components/ui/logo.tsx";
 import { navItem } from "@/types";
 import { Icon } from "@/components/layouts/icons.tsx";
+import { selectCartCount } from "@/features/cart/cartSlice.ts";
+import DrawerUI from "@/components/layouts/drawer.tsx";
+import Cart from "@/pages/cart/cart.tsx";
+import { useCart } from "@/context/cart.tsx";
 
 export function Navbar(): ReactElement {
+  const cartCount = useSelector(selectCartCount) ?? 0;
+  const { isOpenCart, setIsOpenCart } = useCart();
+
   return (
     <HeroUINavBar
       className="sm:py-[20px] sm:px-[20px] lg:py-[32px] lg:px-[100px] dark:bg-[#FCF7EF]"
@@ -56,11 +64,12 @@ export function Navbar(): ReactElement {
             ),
           )}
           <NavbarItem>
-            <Link href="/order">
-              <button className="flex justify-center items-center text-base dark:bg-[#FCF7EF] dark:border-black dark:border dark:hover:text-secondary dark:text-black bg-primary   text-white py-3 px-4 hover:cursor-pointer w-[85px] h-[45px] transition">
+            <button onClick={() => setIsOpenCart((isOpenCart) => !isOpenCart)}>
+              <div className="flex justify-center items-center text-base dark:bg-[#FCF7EF] dark:border-black dark:border dark:hover:text-secondary dark:text-black bg-primary   text-white py-3 px-4 hover:cursor-pointer w-[85px] h-[45px] transition">
                 <span>Order</span>
-              </button>
-            </Link>
+                {cartCount !== 0 && <span> ({cartCount})</span>}
+              </div>
+            </button>
           </NavbarItem>
           <NavbarItem>
             <Link href="/sign-in">
@@ -75,7 +84,26 @@ export function Navbar(): ReactElement {
 
       <NavbarContent className="lg:hidden basis-1 pl-4" justify="end">
         <div className={"flex gap-3 items-center"}>
-          <Icon className={"cursor-pointer"} name={"shopping-basket"} />
+          <DrawerUI
+            isOpen={isOpenCart}
+            title={"Cart"}
+            onClose={() => setIsOpenCart(false)}
+          >
+            <Cart onClose={() => setIsOpenCart(false)} />
+          </DrawerUI>
+          <button
+            className={"relative"}
+            onClick={() => setIsOpenCart((isOpenCart) => !isOpenCart)}
+          >
+            <Icon className={"cursor-pointer"} name={"shopping-basket"} />
+            <div
+              className={
+                "w-6 h-6 bg-yellow rounded-full text-center absolute -top-3 -right-3 text-black"
+              }
+            >
+              <span className={"text-xs"}>{cartCount}</span>
+            </div>
+          </button>
           <NavbarMenuToggle
             className={"text-black cursor-pointer"}
             icon={<HiOutlineMenuAlt3 />}
@@ -112,13 +140,6 @@ export function Navbar(): ReactElement {
           )}
         </div>
         <div className={"flex flex-col justify-center items-center gap-8"}>
-          <NavbarItem className={"w-full"}>
-            <Link className={"w-full"} href="/order">
-              <button className="p-4 text-2xl w-full md:w-2/5 mx-auto flex justify-center items-center dark:bg-[#FCF7EF] dark:border-black dark:border dark:hover:text-secondary dark:text-black bg-primary   text-white py-3 px-4 hover:cursor-pointer  transition">
-                <span>Order</span>
-              </button>
-            </Link>
-          </NavbarItem>
           <NavbarItem className={"w-full"}>
             <Link className={"w-full"} href="/sign-in">
               <button className="p-4 text-2xl w-full md:w-2/5 mx-auto flex items-center justify-center dark:bg-primary dark:text-black dark:hover:text-white transition text-primary px-4 py-3 border border-primary  hover:cursor-pointer text-center">

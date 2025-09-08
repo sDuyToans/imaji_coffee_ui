@@ -5,10 +5,10 @@ import PageHeading from "@/components/ui/page_heading.tsx";
 import { ProductItem } from "@/types";
 import ProductContainer from "@/components/ui/product/product_container.tsx";
 import PrimaryLink from "@/components/ui/button/primary_link.tsx";
-import { useGetProductsQuery } from "@/api/products/productsApi.ts";
+import { useGetProductsBySizeQuery } from "@/api/products/productsApi.ts";
 
 export default function HomeMenu(): ReactElement {
-  const { data: products, isLoading } = useGetProductsQuery();
+  const { data: products, isLoading } = useGetProductsBySizeQuery({ size: 4 });
 
   return (
     <div
@@ -34,7 +34,7 @@ function MenuTitle(): ReactElement {
       }
     >
       <PageHeading className={"text-left"} title={"Find Your Favorite Menu"} />
-      <PrimaryLink content={"Explore Other Menu"} to={"/store"} />
+      <PrimaryLink content={"Explore Other Menu"} to={"/menu"} />
     </div>
   );
 }

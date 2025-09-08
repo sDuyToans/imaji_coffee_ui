@@ -1,9 +1,10 @@
 import { ReactElement } from "react";
 import { Image } from "@heroui/image";
 import { GoDotFill } from "react-icons/go";
+import { Link } from "react-router-dom";
 
 import { NewItem } from "@/types";
-import { formatDate } from "@/components/utils/formatDate.ts";
+import { formatDate } from "@/utils/formatDate.ts";
 
 interface Props {
   newItem: NewItem;
@@ -11,15 +12,16 @@ interface Props {
 
 export default function NewItemCard(props: Props): ReactElement {
   const { newItem } = props;
-  const { title, image, createdAt, time } = newItem;
+  const { newId, title, image, createdAt, time } = newItem;
 
   let created_date: string = formatDate(createdAt);
 
   return (
-    <div
+    <Link
       className={
         "flex flex-col items-center justify-center gap-5 md:flex-row lg:gap-[48px] py-5 lg:py-8"
       }
+      to={`/news/${newId}`}
     >
       <Image
         alt={title}
@@ -36,6 +38,6 @@ export default function NewItemCard(props: Props): ReactElement {
           <span>{created_date}</span>
         </p>
       </div>
-    </div>
+    </Link>
   );
 }

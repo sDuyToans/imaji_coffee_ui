@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import { Card, CardBody, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
+import { useNavigate } from "react-router-dom";
 
 import { ProductItem } from "@/types";
 
@@ -9,8 +10,15 @@ export default function ProductItemCard({
 }: {
   product: ProductItem;
 }): ReactElement {
-  const { name, price, images, oldPrice, isAvailableAtWeb } = product;
-  const heroImgUrl: string = images[0].imageUrl;
+  const { name, price, images, oldPrice, isAvailableAtWeb, quantity } = product;
+  let heroImgUrl: string = images[0].imageUrl;
+
+  for (let img of images) {
+    if (img.isMain) {
+      heroImgUrl = img.imageUrl;
+    }
+  }
+  const navigate = useNavigate();
 
   function getDiscountPercentage(product: ProductItem): number {
     if (product.oldPrice <= 0 || product.oldPrice <= product.price) {
@@ -24,7 +32,14 @@ export default function ProductItemCard({
   let salePercentage: number = getDiscountPercentage(product);
 
   return (
-    <Card className={"rounded-none"} isPressable={true} shadow={"none"}>
+    <Card
+      className={
+        "rounded-none hover:shadow-2xl shadow-primary dark:shadow-white"
+      }
+      isPressable={true}
+      shadow={"none"}
+      onPress={() => navigate(`/menu/detail/${product.productId}`)}
+    >
       <CardBody className={"overflow-visible p-0 relative"}>
         <Image
           alt={name}
@@ -37,10 +52,19 @@ export default function ProductItemCard({
           src={heroImgUrl}
           width={"100%"}
         />
-        {salePercentage > 0 && (
+        {quantity <= 0 && (
           <div
             className={
-              "uppercase bg-[#F14C35] text-white w-[59px] h-[36px] lg:w-[91px] lg:h-[52px] flex items-center justify-center absolute top-0 left-0 z-999"
+              "uppercase bg-black text-white w-[192px] h-[52px]  flex items-center justify-center absolute top-0 left-0 z-10"
+            }
+          >
+            <span>out of stock</span>
+          </div>
+        )}
+        {salePercentage > 0 && quantity > 0 && (
+          <div
+            className={
+              "uppercase bg-[#F14C35] text-white w-[59px] h-[36px] lg:w-[91px] lg:h-[52px] flex items-center justify-center absolute top-0 left-0 z-10"
             }
           >
             <span>sale</span>
