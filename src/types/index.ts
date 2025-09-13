@@ -144,3 +144,46 @@ export interface CountrySelect {
   code: string;
   name: string;
 }
+
+export interface OrderItemRequest {
+  productId: number;
+  quantity: number;
+}
+
+export interface OrderRequest {
+  userId: number;
+  email: string;
+  shippingAddress: ShippingAddress;
+  currency: string;
+  totalAmount: number;
+  taxAmount: number;
+  shippingAmount: number;
+  discountAmount: number;
+  shipMethodId: number;
+  paymentMethod: string;
+  items: OrderItemRequest[];
+}
+
+export interface ProductOrderDetail {
+  productId: number;
+  productName: string;
+  productImg: string;
+  productCategory: string;
+  price: number;
+  quantity: number;
+}
+
+export interface OrderDetail {
+  orderId: number;
+  email: string;
+  shippingAddress: ShippingAddress;
+  status: string;
+  totalAmount: number;
+  items: ProductOrderDetail[];
+  taxAmount: number;
+  shippingAmount: number;
+  discountAmount: number;
+  shippingMethod: string;
+  paymentMethod: string;
+  createdAt: string;
+}

@@ -19,7 +19,7 @@ import Address from "@/components/ui/checkout/address.tsx";
 import Shipping from "@/components/ui/checkout/shipping.tsx";
 import Payment from "@/components/ui/checkout/payment.tsx";
 import { checkoutSchema } from "@/libs/yup/checkout_schema.ts";
-import { ElementErrors } from "@/types";
+import { ElementErrors, OrderItemRequest, OrderRequest } from "@/types";
 import {
   clearCart,
   removePromo,
@@ -31,6 +31,7 @@ import {
   useUpdateOrderStatusMutation,
 } from "@/api/order/orderApi.ts";
 import { useCart } from "@/context/cart.tsx";
+import { usePromo } from "@/context/promo.tsx";
 
 enum Step {
   Address = 0,
@@ -48,11 +49,12 @@ export default function Checkout({
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [cardName, setCardName] = useState("");
-  const { total } = useSelector(selectCartSummary);
+  const { total, tax, shipping, discount } = useSelector(selectCartSummary);
   const dispatch = useDispatch();
   const [createOrder] = useCreateOrderMutation();
   const [updateOrderStatus] = useUpdateOrderStatusMutation();
   const { setIsOpenCart } = useCart();
+  const { openPromoModal } = usePromo();
 
   const [elementErrors, setElementErrors] = useState<ElementErrors>({
     cardNumber: "",
@@ -108,15 +110,27 @@ export default function Checkout({
     setIsProcessing(true);
 
     try {
+      const orderItems: OrderItemRequest[] = cartItems.map(
+        (item): OrderItemRequest => ({
+          productId: item.productId,
+          quantity: item.cartQuantity,
+        }),
+      );
       // 1. Create order and get client secret
-      const orderRes = await createOrder({
+      const payload: OrderRequest = {
         userId: 1,
         email: getValues("email"),
         shippingAddress: getValues("shippingAddress"),
         totalAmount: total,
+        taxAmount: tax,
+        shippingAmount: shipping,
+        discountAmount: discount,
         currency: "USD",
-        items: cartItems,
-      }).unwrap();
+        paymentMethod: "card",
+        shipMethodId: getValues("shipMethodId"),
+        items: orderItems,
+      };
+      const orderRes = await createOrder(payload).unwrap();
 
       const { orderId, clientSecret } = orderRes;
 
@@ -165,7 +179,7 @@ export default function Checkout({
         dispatch(clearCart());
         dispatch(removePromo());
         setIsOpenCart(false);
-        navigate("/completed-checkout");
+        navigate(`/completed-checkout/${orderId}`);
       }
     } catch (error) {
       toast.error("Error processing payment. Please try again later.");
@@ -219,7 +233,11 @@ export default function Checkout({
                 </BreadcrumbItem>
               </Breadcrumbs>
             </div>
-            {renderStepContent()}
+            {cartItems.length > 0 ? (
+              renderStepContent()
+            ) : (
+              <p>There is nothing to display, please order and come back</p>
+            )}
             {step === Step.Address && (
               <PrimaryButton
                 className={"hidden lg:flex"}
@@ -257,7 +275,7 @@ export default function Checkout({
               </PrimaryButton>
             )}
           </div>
-          <OrderItemsSummary openPromo={() => {}} onClose={closeCheckout}>
+          <OrderItemsSummary openPromo={openPromoModal} onClose={closeCheckout}>
             {step === Step.Address && (
               <PrimaryButton
                 className={"w-full bg-primary text-white"}

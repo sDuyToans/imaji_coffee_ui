@@ -10,6 +10,10 @@ import Menu from "@/pages/menu/menu.tsx";
 import Product from "@/pages/product/product.tsx";
 import Cart from "@/pages/cart/cart.tsx";
 import OrderCompleted from "@/pages/order/order_completed.tsx";
+import Login from "@/pages/auth/login.tsx";
+import Register from "@/pages/auth/register.tsx";
+import ProtectedRoute from "@/routes/protectedRoute.tsx";
+import Account from "@/pages/user/account.tsx";
 
 export default function AppRoutes(): ReactElement {
   return (
@@ -25,7 +29,21 @@ export default function AppRoutes(): ReactElement {
         <Route element={<Product />} path={"detail/:productId"} />
       </Route>
       <Route element={<Cart />} path={"/cart"} />
-      <Route element={<OrderCompleted />} path={"/completed-checkout"} />
+      <Route
+        element={<OrderCompleted />}
+        path={"/completed-checkout/:orderId"}
+      />
+      <Route element={<Login />} path={"/sign-in"} />
+      <Route element={<Register />} path={"/register"} />
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <Account />
+          </ProtectedRoute>
+        }
+        path={"/account"}
+      />
       {/*Catch-all unknown routes*/}
       <Route element={<Error />} path={"*"} />
     </Routes>

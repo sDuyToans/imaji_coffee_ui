@@ -27,6 +27,28 @@ export function Navbar(): ReactElement {
   const cartCount = useSelector(selectCartCount) ?? 0;
   const { isOpenCart, setIsOpenCart } = useCart();
 
+  function getUsernameFromToken(): string | null {
+    const token = localStorage.getItem("token");
+
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+
+      return payload.username || payload.sub || null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  }
+
+  const username = getUsernameFromToken();
+  const isLoggedIn = !!username;
+
   return (
     <HeroUINavBar
       className="sm:py-[20px] sm:px-[20px] lg:py-[32px] lg:px-[100px] dark:bg-[#FCF7EF]"
@@ -71,13 +93,25 @@ export function Navbar(): ReactElement {
               </div>
             </button>
           </NavbarItem>
-          <NavbarItem>
-            <Link href="/sign-in">
-              <button className="flex items-center justify-center text-base dark:bg-primary dark:text-black dark:hover:text-white transition text-primary px-4 py-3 border border-primary  hover:cursor-pointer w-[85px] h-[45px] text-center">
-                <span>Sign In</span>
-              </button>
-            </Link>
-          </NavbarItem>
+          {isLoggedIn ? (
+            <>
+              <NavbarItem>
+                <span className={"text-black px-4"}>Hi, {username}</span>
+              </NavbarItem>
+              <NavbarItem>
+                <button onClick={logout}>Logout</button>
+              </NavbarItem>
+            </>
+          ) : (
+            <NavbarItem>
+              <Link href="/sign-in">
+                <button className="flex items-center justify-center text-base dark:bg-primary dark:text-black dark:hover:text-white transition text-primary px-4 py-3 border border-primary  hover:cursor-pointer w-[85px] h-[45px] text-center">
+                  <span>Sign In</span>
+                </button>
+              </Link>
+            </NavbarItem>
+          )}
+
           <ThemeSwitch />
         </div>
       </NavbarContent>
@@ -140,13 +174,24 @@ export function Navbar(): ReactElement {
           )}
         </div>
         <div className={"flex flex-col justify-center items-center gap-8"}>
-          <NavbarItem className={"w-full"}>
-            <Link className={"w-full"} href="/sign-in">
-              <button className="p-4 text-2xl w-full md:w-2/5 mx-auto flex items-center justify-center dark:bg-primary dark:text-black dark:hover:text-white transition text-primary px-4 py-3 border border-primary  hover:cursor-pointer text-center">
-                <span>Sign In</span>
-              </button>
-            </Link>
-          </NavbarItem>
+          {isLoggedIn ? (
+            <>
+              <NavbarItem>
+                <span className={"text-black px-4"}>Hi, {username}</span>
+              </NavbarItem>
+              <NavbarItem>
+                <button onClick={logout}>Logout</button>
+              </NavbarItem>
+            </>
+          ) : (
+            <NavbarItem>
+              <Link href="/sign-in">
+                <button className="flex items-center justify-center text-base dark:bg-primary dark:text-black dark:hover:text-white transition text-primary px-4 py-3 border border-primary  hover:cursor-pointer w-[85px] h-[45px] text-center">
+                  <span>Sign In</span>
+                </button>
+              </Link>
+            </NavbarItem>
+          )}
         </div>
       </NavbarMenu>
     </HeroUINavBar>

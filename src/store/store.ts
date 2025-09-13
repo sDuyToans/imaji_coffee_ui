@@ -9,6 +9,8 @@ import { promosApi } from "@/api/promos/promosApi.ts";
 import { shipMethodsApi } from "@/api/ship_methods/shipMethodsApi.ts";
 import { paymentApi } from "@/api/payment/paymentApi.ts";
 import { orderApi } from "@/api/order/orderApi.ts";
+import { apiSlice } from "@/api/jwt/apiSlice.ts";
+import { authApi } from "@/api/auth/authApi.ts";
 
 let middlewareList = [
   productsApi.middleware,
@@ -19,6 +21,8 @@ let middlewareList = [
   shipMethodsApi.middleware,
   paymentApi.middleware,
   orderApi.middleware,
+  apiSlice.middleware,
+  authApi.middleware,
 ];
 
 export const store = configureStore({
@@ -32,6 +36,8 @@ export const store = configureStore({
     [shipMethodsApi.reducerPath]: shipMethodsApi.reducer,
     [paymentApi.reducerPath]: paymentApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
+    [authApi.reducerPath]: authApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(middlewareList).concat(persistCart),

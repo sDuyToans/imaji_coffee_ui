@@ -31,7 +31,9 @@ export default function CartSummary({
         "flex-4/12 bg-[#FCF7EF] px-5 py-5 lg:px-[48px] lg:pt-[80px] flex flex-col gap-[48px] h-dvh"
       }
     >
-      <p className={"text-4xl hidden lg:block"}>Cart Summary</p>
+      <p className={"text-4xl hidden lg:block dark:text-primary"}>
+        Cart Summary
+      </p>
       <div className={"flex flex-col gap-6"}>
         <div className={"flex justify-between items-center"}>
           <span className={"text-[#7F7F7F]"}>Subtotal</span>
@@ -48,12 +50,12 @@ export default function CartSummary({
             placeholder={"Enter code"}
           />
           <PrimaryButton
-            className={"py-3 px-4 w-full"}
+            className={"py-3 px-4 w-full dark:border-black"}
             type={"button"}
             onPress={openPromo}
           >
             <div className={"flex items-center"}>
-              <p>Choose Discount Promo</p>
+              <p className={"dark:text-primary"}>Choose Discount Promo</p>
               <FaChevronRight />
             </div>
           </PrimaryButton>

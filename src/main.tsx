@@ -12,6 +12,7 @@ import "@/styles/index.css";
 
 import { store } from "@/store/store.ts";
 import { CartProvider } from "@/context/cart.tsx";
+import { PromoProvider } from "@/context/promo.tsx";
 
 const stripePromise = loadStripe(
   "pk_test_51S3Tyy578Xxwj3ovk8MVYSqSgZd9zM0ftZEub6xiRkJmU6jpRxDmD4TiFvshn20APTSEadqSBerTWaUvNmuSseP600Jg5GL3zh",
@@ -24,7 +25,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Elements stripe={stripePromise}>
           <HeroUiProvider>
             <CartProvider>
-              <App />
+              <PromoProvider>
+                <App />
+              </PromoProvider>
             </CartProvider>
           </HeroUiProvider>
         </Elements>

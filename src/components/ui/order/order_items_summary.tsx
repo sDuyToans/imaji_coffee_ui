@@ -37,7 +37,9 @@ export default function OrderItemsSummary({
         "flex-4/12 bg-[#FCF7EF] px-5 py-5 lg:px-[48px] lg:pt-[80px] flex flex-col gap-[48px] "
       }
     >
-      <p className={"text-4xl hidden lg:block"}>Order Items</p>
+      <p className={"text-4xl hidden lg:block dark:text-primary"}>
+        Order Items
+      </p>
       <div className={"flex flex-col gap-6"}>
         {cartItems.map((i) => (
           <div key={i.productId} className={"flex flex-col gap-1"}>
@@ -45,18 +47,18 @@ export default function OrderItemsSummary({
               {i.name.toUpperCase()}
             </p>
             <div className={"text-lg font-medium flex items-center gap-2"}>
-              <span>{i.cartQuantity}x</span>
-              <span>${i.price},00</span>
+              <span className={"dark:text-black"}>{i.cartQuantity}x</span>
+              <span className={"dark:text-black"}>${i.price},00</span>
             </div>
           </div>
         ))}
         <div className={"flex justify-between items-center"}>
           <span className={"text-[#7F7F7F]"}>Tax (10%)</span>
-          <span className={"text-base"}>${tax}</span>
+          <span className={"text-base dark:text-black"}>${tax}</span>
         </div>
         <div className={"flex justify-between items-center"}>
           <span className={"text-[#7F7F7F]"}>Shipping</span>
-          <span className={"text-base"}>${shipping}</span>
+          <span className={"text-base dark:text-black"}>${shipping}</span>
         </div>
         <div className={"flex flex-col gap-2"}>
           <span className={"text-[#7F7F7F]"}>Promo Code</span>
@@ -65,7 +67,7 @@ export default function OrderItemsSummary({
             placeholder={"Enter code"}
           />
           <PrimaryButton
-            className={"py-3 px-4 w-full"}
+            className={"py-3 px-4 w-full dark:bg-primary"}
             type={"button"}
             onPress={openPromo}
           >
