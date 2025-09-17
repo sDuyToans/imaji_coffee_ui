@@ -10,7 +10,7 @@ export const promosApi = createApi({
   }),
   endpoints: (builder) => ({
     getPromos: builder.query<PromosProduct, { productId: number }>({
-      query: ({ productId }) => `/${productId}/promos`,
+      query: ({ productId }) => `/products/${productId}/promos`,
     }),
   }),
 });
