@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
 import { Spinner } from "@heroui/spinner";
+import { useDispatch } from "react-redux";
 
 import PrimaryButton from "@/components/ui/button/primary_button.tsx";
 import RightAuth from "@/components/ui/auth/right_auth.tsx";
@@ -15,6 +16,7 @@ import LeftAuthContainer from "@/components/ui/auth/left_auth.tsx";
 import { useSignupMutation } from "@/api/auth/authApi.ts";
 import { signupSchema } from "@/libs/yup/signup_schema.ts";
 import ErrorText from "@/components/ui/erros/error_text.tsx";
+import { setToken } from "@/features/auth/authSlice.ts";
 
 type FormRegisterType = {
   email: string;
@@ -35,6 +37,7 @@ export default function Register(): ReactElement {
 function RegisterContainer(): ReactElement {
   const [signup, { isLoading }] = useSignupMutation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -44,12 +47,12 @@ function RegisterContainer(): ReactElement {
     resolver: yupResolver(signupSchema),
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: FormRegisterType) => {
     try {
       const res = await signup(data).unwrap();
 
       // store token
-      localStorage.setItem("token", res.token);
+      dispatch(setToken(res.token));
 
       // success notification
       toast.success("Account created successfully!");
@@ -57,6 +60,8 @@ function RegisterContainer(): ReactElement {
       // redirect
       navigate("/account");
     } catch (e) {
+      console.log(e);
+
       toast.error("Sign up failed. Please check your details");
     }
   };
@@ -129,32 +134,32 @@ function RegisterContainer(): ReactElement {
             <ErrorText message={errors.email.message} />
           )}
         </div>
-        <Input
-          classNames={{
-            inputWrapper: "rounded-none  border border-primary bg-white",
-            input: "rounded-none bg-white",
-          }}
-          label={"Password"}
-          labelPlacement={"outside-top"}
-          placeholder={"Enter password"}
-          type={"password"}
-          {...register("password")}
-        />
-        {errors.password?.message && (
-          <ErrorText message={errors.password.message} />
-        )}
+        <div className={"flex flex-col gap-1"}>
+          <Input
+            classNames={{
+              inputWrapper: "rounded-none  border border-primary bg-white",
+              input: "rounded-none bg-white",
+            }}
+            label={"Password"}
+            labelPlacement={"outside-top"}
+            placeholder={"Enter password"}
+            type={"password"}
+            {...register("password")}
+          />
+          {errors.password?.message && (
+            <ErrorText message={errors.password.message} />
+          )}
+        </div>
         <PrimaryButton
           className={"w-full bg-primary text-white"}
-          type={"button"}
+          type={"submit"}
         >
-          Sign in
+          {isLoading ? <Spinner color={"primary"} /> : "Sign up"}
         </PrimaryButton>
       </form>
       <div className={"flex justify-center gap-3"}>
         <p>Already have an account?</p>
-        <Link className={"text-primary underline"} href={"/sign-in"}>
-          {isLoading ? <Spinner color={"primary"} /> : "Sign up"}
-        </Link>
+        <Link href={"/sign-in"}>Sign in</Link>
       </div>
     </div>
   );

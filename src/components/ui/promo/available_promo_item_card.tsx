@@ -1,10 +1,9 @@
 import { Dispatch, ReactElement, SetStateAction } from "react";
 import { CiDiscount1 } from "react-icons/ci";
-import { useDispatch } from "react-redux";
 
 import PrimaryButton from "@/components/ui/button/primary_button.tsx";
 import { PromoItem } from "@/types";
-import { applyPromo } from "@/features/cart/cartSlice.ts";
+import { useUpdatePromoMutation } from "@/api/cart/cartApi.ts";
 
 export default function AvailablePromoItemCard({
   promoItem,
@@ -16,17 +15,11 @@ export default function AvailablePromoItemCard({
   setIsApply: Dispatch<SetStateAction<boolean>>;
 }): ReactElement {
   const { title, description } = promoItem;
+  const [updatePromo] = useUpdatePromoMutation();
 
-  const dispatch = useDispatch();
   const handleApplyPromo = () => {
     setIsApply(true);
-    dispatch(
-      applyPromo({
-        code: promoItem.code,
-        discountType: promoItem.discountType,
-        discountValue: promoItem.discountValue,
-      }),
-    );
+    updatePromo(promoItem.promoId);
   };
 
   return (

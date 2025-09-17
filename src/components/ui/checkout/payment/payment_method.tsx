@@ -1,7 +1,7 @@
 import { Radio, RadioGroup } from "@heroui/radio";
 import { useFormContext } from "react-hook-form";
 
-import StripeCheckout from "@/components/ui/checkout/card/stripe_checkout.tsx";
+import StripeCheckout from "@/components/ui/checkout/checkout_method/stripe_checkout.tsx";
 import { CheckoutData, StripeCheckoutProps } from "@/types";
 
 export default function PaymentMethod({

@@ -1,36 +1,31 @@
 import { ReactElement } from "react";
-import { useDispatch } from "react-redux";
 import { Image } from "@heroui/image";
 import { IoIosClose } from "react-icons/io";
 
+import { CartItemResponseDto } from "@/types";
 import {
-  CartItem,
-  removeFromCart,
-  updateQuantity,
-} from "@/features/cart/cartSlice.ts";
+  useRemoveFromCartMutation,
+  useUpdateCartMutation,
+} from "@/api/cart/cartApi.ts";
 
-export default function Item({ item }: { item: CartItem }): ReactElement {
-  const dispatch = useDispatch();
+export default function Item({
+  item,
+}: {
+  item: CartItemResponseDto;
+}): ReactElement {
+  const [updateCart] = useUpdateCartMutation();
+  const [removeFromCart] = useRemoveFromCartMutation();
 
-  const increase = () =>
-    dispatch(
-      updateQuantity({
-        productId: item.productId,
-        quantity: item.cartQuantity + 1,
-      }),
-    );
+  const increase = () => {
+    updateCart({ cartItemId: item.cartItemId, quantity: item.quantity + 1 });
+  };
 
   const decrease = () => {
-    dispatch(
-      updateQuantity({
-        productId: item.productId,
-        quantity: item.cartQuantity - 1,
-      }),
-    );
+    updateCart({ cartItemId: item.cartItemId, quantity: item.quantity - 1 });
   };
 
   const remove = () => {
-    dispatch(removeFromCart(item.productId));
+    removeFromCart(item.cartItemId);
   };
 
   return (
@@ -41,13 +36,13 @@ export default function Item({ item }: { item: CartItem }): ReactElement {
           <Image
             alt={"hero img"}
             className="rounded-none w-full h-[107.5px] md:h-[91.95px] md:w-[120px] object-cover"
-            src={item.images.find((im) => im.isMain)?.imageUrl}
+            src={item.imageUrl}
           />
         </div>
         <div className="flex flex-col w-2/3">
-          <p className="text-lg lg:text-xl">{item.name.toUpperCase()}</p>
+          <p className="text-lg lg:text-xl">{item.productName.toUpperCase()}</p>
           <p className="text-sm text-[#7F7F7F]">
-            IMAJI COFFEE {item.category.toUpperCase()}
+            IMAJI COFFEE {item.productCategory.toUpperCase()}
           </p>
           <div className="block md:hidden flex-1/5 text-lg">
             ${item.price}.00
@@ -57,12 +52,12 @@ export default function Item({ item }: { item: CartItem }): ReactElement {
               <div className="flex items-center justify-between border border-black w-[80px] dark:border-primary">
                 <button
                   className="px-2 py-1 text-lg cursor-pointer"
-                  disabled={item.cartQuantity === 1}
+                  disabled={item.quantity === 1}
                   onClick={decrease}
                 >
                   −
                 </button>
-                <span className="px-2 py-1">{item.cartQuantity}</span>
+                <span className="px-2 py-1">{item.quantity}</span>
                 <button
                   className="px-2 py-1 text-lg cursor-pointer"
                   onClick={increase}
@@ -72,7 +67,7 @@ export default function Item({ item }: { item: CartItem }): ReactElement {
               </div>
             </div>
             <div className="flex-1/5 text-lg">
-              ${(item.price * item.cartQuantity).toFixed(2)}
+              ${(item.price * item.quantity).toFixed(2)}
             </div>
             <div className="w-[30px] text-center">
               <button className="text-black cursor-pointer" onClick={remove}>
@@ -91,12 +86,12 @@ export default function Item({ item }: { item: CartItem }): ReactElement {
         <div className="flex items-center justify-between border border-black w-[120px] dark:border-primary">
           <button
             className="px-3 py-2 text-lg cursor-pointer"
-            disabled={item.cartQuantity === 1}
+            disabled={item.quantity === 1}
             onClick={decrease}
           >
             −
           </button>
-          <span className="px-4 py-2">{item.cartQuantity}</span>
+          <span className="px-4 py-2">{item.quantity}</span>
           <button
             className="px-3 py-2 text-lg cursor-pointer"
             onClick={increase}
@@ -108,7 +103,7 @@ export default function Item({ item }: { item: CartItem }): ReactElement {
 
       {/* Subtotal */}
       <div className="hidden md:block flex-1/5 text-lg">
-        ${(item.price * item.cartQuantity).toFixed(2)}
+        ${(item.price * item.quantity).toFixed(2)}
       </div>
 
       {/* Delete */}

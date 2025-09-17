@@ -1,17 +1,11 @@
 import { ReactElement, ReactNode } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Input } from "@heroui/input";
 import { FaChevronRight } from "react-icons/fa6";
 import { GoArrowLeft } from "react-icons/go";
 import { Chip } from "@heroui/chip";
 
-import {
-  CartItem,
-  removePromo,
-  selectCartItem,
-  selectCartSummary,
-} from "@/features/cart/cartSlice.ts";
 import PrimaryButton from "@/components/ui/button/primary_button.tsx";
+import { useClearPromoMutation, useGetCartQuery } from "@/api/cart/cartApi.ts";
 
 export default function OrderItemsSummary({
   onClose,
@@ -22,14 +16,24 @@ export default function OrderItemsSummary({
   openPromo: () => void;
   children?: ReactNode;
 }): ReactElement {
-  const { subtotal, tax, total, promoCode, discount, shipping } =
-    useSelector(selectCartSummary);
+  const { data: cart } = useGetCartQuery();
+  const subtotal = cart?.subtotal || 0;
+  const tax = cart?.tax || 0; // Or backend value if you send tax directly
+  const total = cart?.total || 0;
+  const shipping = cart?.shipping;
+  const discount = cart?.discount;
+  const cartItems = cart?.cartItems ?? [];
+  const promoCode = cart?.promo?.code ?? "";
 
-  const dispatch = useDispatch();
-  const handleClearDiscount = () => {
-    dispatch(removePromo());
+  const [clearPromo] = useClearPromoMutation();
+
+  const handleClearDiscount = async () => {
+    try {
+      await clearPromo().unwrap();
+    } catch (e) {
+      console.error("Failed to clear promo:", e);
+    }
   };
-  const cartItems: CartItem[] = useSelector(selectCartItem);
 
   return (
     <div
@@ -44,10 +48,10 @@ export default function OrderItemsSummary({
         {cartItems.map((i) => (
           <div key={i.productId} className={"flex flex-col gap-1"}>
             <p className={"text-lg text-dark-grey-70"}>
-              {i.name.toUpperCase()}
+              {i.productName.toUpperCase()}
             </p>
             <div className={"text-lg font-medium flex items-center gap-2"}>
-              <span className={"dark:text-black"}>{i.cartQuantity}x</span>
+              <span className={"dark:text-black"}>{i.quantity}x</span>
               <span className={"dark:text-black"}>${i.price},00</span>
             </div>
           </div>
@@ -76,10 +80,10 @@ export default function OrderItemsSummary({
               <FaChevronRight />
             </div>
           </PrimaryButton>
-          {discount !== 0 && (
+          {promoCode && discount && discount !== 0 && (
             <Chip onClose={handleClearDiscount}>
               <p>
-                {promoCode} : {discount} $
+                {promoCode} : {discount}$
               </p>
             </Chip>
           )}

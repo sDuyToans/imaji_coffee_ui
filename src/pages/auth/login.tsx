@@ -9,6 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "@heroui/spinner";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 import LeftAuthContainer from "@/components/ui/auth/left_auth.tsx";
 import RightAuth from "@/components/ui/auth/right_auth.tsx";
@@ -16,6 +17,7 @@ import PrimaryButton from "@/components/ui/button/primary_button.tsx";
 import { useLoginMutation } from "@/api/auth/authApi.ts";
 import { loginSchema } from "@/libs/yup/login_schema.ts";
 import ErrorText from "@/components/ui/erros/error_text.tsx";
+import { setToken } from "@/features/auth/authSlice.ts";
 
 type LoginFormValues = {
   loginInput: string;
@@ -37,6 +39,7 @@ function LoginContainer(): ReactElement {
   const [login, { isLoading, error: errorBE }] = useLoginMutation();
   const validationErrors = (errorBE as { data?: Record<string, string> })?.data;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -49,7 +52,8 @@ function LoginContainer(): ReactElement {
     try {
       const res = await login(data).unwrap();
 
-      localStorage.setItem("token", res.token);
+      dispatch(setToken(res.token));
+      toast.success("Log in successfully");
       navigate("/account");
     } catch {
       toast.error("Invalid email or password");

@@ -1,12 +1,11 @@
 import { ReactElement, ReactNode } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Input } from "@heroui/input";
 import { FaChevronRight } from "react-icons/fa6";
 import { GoArrowLeft } from "react-icons/go";
 import { Chip } from "@heroui/chip";
 
-import { removePromo, selectCartSummary } from "@/features/cart/cartSlice.ts";
 import PrimaryButton from "@/components/ui/button/primary_button.tsx";
+import { useClearPromoMutation, useGetCartQuery } from "@/api/cart/cartApi.ts";
 
 export default function CartSummary({
   onClose,
@@ -18,11 +17,22 @@ export default function CartSummary({
   summaryBtnContent: string;
   children?: ReactNode;
 }): ReactElement {
-  const { subtotal, tax, total, promoCode, discount } =
-    useSelector(selectCartSummary);
-  const dispatch = useDispatch();
-  const handleClearDiscount = () => {
-    dispatch(removePromo());
+  const { data: cart } = useGetCartQuery();
+
+  const subtotal = cart?.subtotal || 0;
+  const tax = cart?.tax || 0; // Or backend value if you send tax directly
+  const total = cart?.total || 0;
+  const promoCode = cart?.promo?.code || "";
+  const discount = cart?.discount || 0;
+
+  const [clearPromo] = useClearPromoMutation();
+
+  const handleClearDiscount = async () => {
+    try {
+      await clearPromo().unwrap();
+    } catch (e) {
+      console.error("Failed to clear promo:", e);
+    }
   };
 
   return (

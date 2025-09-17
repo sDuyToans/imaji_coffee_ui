@@ -9,7 +9,6 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
 import DrawerHeading from "@/components/ui/drawer_heading.tsx";
@@ -21,17 +20,16 @@ import Payment from "@/components/ui/checkout/payment.tsx";
 import { checkoutSchema } from "@/libs/yup/checkout_schema.ts";
 import { ElementErrors, OrderItemRequest, OrderRequest } from "@/types";
 import {
-  clearCart,
-  removePromo,
-  selectCartItem,
-  selectCartSummary,
-} from "@/features/cart/cartSlice.ts";
-import {
   useCreateOrderMutation,
   useUpdateOrderStatusMutation,
 } from "@/api/order/orderApi.ts";
 import { useCart } from "@/context/cart.tsx";
 import { usePromo } from "@/context/promo.tsx";
+import {
+  useClearCartMutation,
+  useClearPromoMutation,
+  useGetCartQuery,
+} from "@/api/cart/cartApi.ts";
 
 enum Step {
   Address = 0,
@@ -45,14 +43,22 @@ export default function Checkout({
   closeCheckout: () => void;
 }): ReactElement {
   const [step, setStep] = useState<Step>(Step.Address);
-  const cartItems = useSelector(selectCartItem);
+  const { data } = useGetCartQuery();
+  const cartItems = data?.cartItems ?? [];
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [cardName, setCardName] = useState("");
-  const { total, tax, shipping, discount } = useSelector(selectCartSummary);
-  const dispatch = useDispatch();
+  const { data: cart } = useGetCartQuery();
+
+  // const subtotal = cart?.subtotal;
+  const tax = cart?.tax; // Or backend value if you send tax directly
+  const total = cart?.total || 0;
+  const shipping = cart?.shipping;
+  const discount = cart?.discount;
   const [createOrder] = useCreateOrderMutation();
   const [updateOrderStatus] = useUpdateOrderStatusMutation();
+  const [clearCart] = useClearCartMutation();
+  const [clearPromo] = useClearPromoMutation();
   const { setIsOpenCart } = useCart();
   const { openPromoModal } = usePromo();
 
@@ -86,7 +92,7 @@ export default function Checkout({
 
   const { getValues } = methods;
 
-  const handleNext = async (data: any) => {
+  const handleNext = async () => {
     if (step === Step.Address) setStep(Step.Shipping);
     else if (step === Step.Shipping) setStep(Step.Payment);
     else if (step === Step.Payment) {
@@ -113,7 +119,7 @@ export default function Checkout({
       const orderItems: OrderItemRequest[] = cartItems.map(
         (item): OrderItemRequest => ({
           productId: item.productId,
-          quantity: item.cartQuantity,
+          quantity: item.quantity,
         }),
       );
       // 1. Create order and get client secret
@@ -122,9 +128,9 @@ export default function Checkout({
         email: getValues("email"),
         shippingAddress: getValues("shippingAddress"),
         totalAmount: total,
-        taxAmount: tax,
-        shippingAmount: shipping,
-        discountAmount: discount,
+        taxAmount: tax ?? 0,
+        shippingAmount: shipping ?? 0,
+        discountAmount: discount ?? 0,
         currency: "USD",
         paymentMethod: "card",
         shipMethodId: getValues("shipMethodId"),
@@ -176,8 +182,8 @@ export default function Checkout({
         // Payment success -> update oder status
         await updateOrderStatus({ orderId, status: "PAID" });
         toast.success("Payment successful!");
-        dispatch(clearCart());
-        dispatch(removePromo());
+        clearCart();
+        clearPromo();
         setIsOpenCart(false);
         navigate(`/completed-checkout/${orderId}`);
       }

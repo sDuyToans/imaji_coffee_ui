@@ -187,3 +187,48 @@ export interface OrderDetail {
   paymentMethod: string;
   createdAt: string;
 }
+
+export interface CartItem extends ProductItem {
+  cartQuantity: number;
+}
+
+export interface CartItemRequestDto {
+  productId: number;
+  quantity: number;
+}
+
+export interface CartItemResponseDto {
+  cartItemId: number;
+  productId: number;
+  productName: string;
+  productCategory: string;
+  price: number;
+  quantity: number;
+  imageUrl: string;
+}
+
+export interface CartDto {
+  cartId: number;
+  userId: number;
+  cartItems: CartItemResponseDto[];
+  shipMethod?: ShipMethodDto | null;
+  promo?: PromoDto | null;
+  subtotal: number;
+  total: number;
+  discount: number;
+  shipping: number;
+  tax: number;
+}
+
+export interface ShipMethodDto {
+  methodId: number;
+  name: string;
+  price: number;
+}
+
+export interface PromoDto {
+  promoId: number;
+  code: string;
+  discountType: "percentage" | "fixed" | "free_shipping";
+  discountValue: number;
+}

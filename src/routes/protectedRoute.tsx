@@ -1,11 +1,13 @@
 import { JSX, ReactElement } from "react";
 import { Navigate } from "react-router-dom";
-import { Spinner } from "@heroui/spinner";
-
-import { useValidateTokenQuery } from "@/api/account/accountApi.ts";
+import { jwtDecode } from "jwt-decode";
 
 interface ProtectedRouteProps {
   children: JSX.Element;
+}
+
+interface TokenPayload {
+  exp: number;
 }
 
 export default function ProtectedRoute({
@@ -13,24 +15,22 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps): ReactElement {
   const token = localStorage.getItem("token");
 
-  // skip validate if there is no token
-  const { data, isLoading, error } = useValidateTokenQuery(undefined, {
-    skip: !token, // => dont call api if there is no token
-  });
-
-  // No token -> redirect immediately
   if (!token) return <Navigate replace={true} to={"/sign-in"} />;
 
-  // show spinner until back end validated token
-  if (isLoading) return <Spinner color={"primary"} />;
+  try {
+    const { exp } = jwtDecode<TokenPayload>(token);
 
-  // if error -> return to sign in
-  if (error || !data) {
+    // if expired, redirect to sign in
+    if (Date.now() >= exp * 1000) {
+      localStorage.removeItem("token");
+
+      return <Navigate replace={true} to={"/sign-in"} />;
+    }
+  } catch (e) {
     localStorage.removeItem("token");
 
     return <Navigate replace={true} to={"/sign-in"} />;
   }
 
-  // token valid -> show protected page
   return children;
 }

@@ -1,11 +1,10 @@
 import { ReactElement, useState } from "react";
-import { useDispatch } from "react-redux";
 
 import PrimaryButton from "@/components/ui/button/primary_button.tsx";
 import { ProductItem } from "@/types";
-import { addToCart } from "@/features/cart/cartSlice.ts";
 import Modal from "@/components/layouts/modal.tsx";
 import { useCart } from "@/context/cart.tsx";
+import { useAddToCartMutation } from "@/api/cart/cartApi.ts";
 
 export default function ProductButtonsFunction({
   product,
@@ -13,11 +12,13 @@ export default function ProductButtonsFunction({
   product: ProductItem;
 }): ReactElement {
   const [quantity, setQuantity] = useState(1);
-  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
+  const [addToCart] = useAddToCartMutation();
 
   const handleAddToCart = () => {
-    dispatch(addToCart({ product, quantity }));
+    console.log(quantity);
+
+    addToCart({ productId: product.productId, quantity: quantity });
     setIsOpen(true);
   };
 

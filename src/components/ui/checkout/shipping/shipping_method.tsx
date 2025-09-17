@@ -1,12 +1,11 @@
 import { ReactElement } from "react";
 import { Spinner } from "@heroui/spinner";
 import { useFormContext } from "react-hook-form";
-import { useDispatch } from "react-redux";
 
 import { useGetShipMethodsQuery } from "@/api/ship_methods/shipMethodsApi.ts";
 import { CheckoutData, ShippingMethodItem } from "@/types";
 import ErrorText from "@/components/ui/erros/error_text.tsx";
-import { setShippingMethod } from "@/features/cart/cartSlice.ts";
+import { useUpdateShippingMutation } from "@/api/cart/cartApi.ts";
 
 export default function ShippingMethod(): ReactElement {
   const { data: shippingMethods, isLoading } = useGetShipMethodsQuery();
@@ -15,15 +14,13 @@ export default function ShippingMethod(): ReactElement {
     watch,
     formState: { errors },
   } = useFormContext<CheckoutData>();
-  const dispatch = useDispatch();
+  const [updateShipping] = useUpdateShippingMutation();
 
   // @ts-ignore
   const selected = watch("shipMethodId");
 
   const handleSelect = (method: ShippingMethodItem) => {
-    dispatch(
-      setShippingMethod({ methodId: method.methodId, price: method.price }),
-    );
+    updateShipping(method.methodId);
   };
 
   if (isLoading) {

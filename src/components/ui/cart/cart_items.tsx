@@ -1,12 +1,12 @@
 import { ReactElement } from "react";
 
-import { CartItem } from "@/features/cart/cartSlice.ts";
 import Item from "@/components/ui/cart/item.tsx";
+import { CartItemResponseDto } from "@/types";
 
 export default function CartItems({
   items,
 }: {
-  items: CartItem[];
+  items: CartItemResponseDto[];
 }): ReactElement {
   return (
     <div className="flex flex-col">

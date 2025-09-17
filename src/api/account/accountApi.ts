@@ -17,5 +17,5 @@ export const accountApi = apiSlice.injectEndpoints({
 export const {
   useGetAccountQuery,
   useValidateTokenQuery,
-  useGetAccountOrders,
+  useGetAccountOrdersQuery,
 } = accountApi;
