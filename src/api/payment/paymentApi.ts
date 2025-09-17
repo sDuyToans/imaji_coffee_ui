@@ -1,9 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const apiURL = import.meta.env.VITE_API_BASE_URL;
+
 export const paymentApi = createApi({
   reducerPath: "paymentApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/v1/payment",
+    baseUrl: apiURL,
   }),
   endpoints: (builder) => ({
     createPaymentIntent: builder.mutation<
@@ -11,7 +13,7 @@ export const paymentApi = createApi({
       { amount: number; currency: string }
     >({
       query: (body) => ({
-        url: "/create-payment-intent",
+        url: "/payment/create-payment-intent",
         method: "POST",
         body,
       }),

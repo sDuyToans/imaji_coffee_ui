@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:localhost": "tsc && vite build --mode localhost",
+    "build:dev": "tsc && vite build --mode dev",
     "lint": "eslint --fix",
     "preview": "vite preview"
   },

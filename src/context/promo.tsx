@@ -6,7 +6,7 @@ interface PromoContextType {
   closePromoModal: () => void;
 }
 
-const PromoContext = createContext<PromoContextType>(null);
+const PromoContext = createContext<PromoContextType | null>(null);
 
 export function PromoProvider({ children }: { children: ReactNode }) {
   const [isOpenPromoModal, setIsOpenPromoModal] = useState(false);

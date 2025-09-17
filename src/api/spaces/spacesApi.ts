@@ -2,14 +2,16 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { SliderItem } from "@/types";
 
+const apiURL = import.meta.env.VITE_API_BASE_URL;
+
 export const spacesApi = createApi({
   reducerPath: "spacesApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/v1/spaces",
+    baseUrl: apiURL,
   }),
   endpoints: (builder) => ({
     getSpaces: builder.query<SliderItem[], void>({
-      query: () => "",
+      query: () => "/spaces",
     }),
   }),
 });

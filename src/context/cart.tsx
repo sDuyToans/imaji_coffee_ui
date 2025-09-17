@@ -5,7 +5,7 @@ interface CartContextType {
   setIsOpenCart: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CartContext = createContext<CartContextType>(null);
+const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [isOpenCart, setIsOpenCart] = useState(false);

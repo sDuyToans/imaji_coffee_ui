@@ -72,7 +72,7 @@ export default function NewList(): ReactElement {
         <PrimaryButton
           content={"Load More News"}
           type={"button"}
-          onClick={handleLoadMore}
+          onPress={handleLoadMore}
         />
       </div>
     </div>

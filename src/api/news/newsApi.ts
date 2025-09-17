@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { NewItem } from "@/types";
+const apiURL = import.meta.env.VITE_API_BASE_URL;
 
 export const newsApi = createApi({
   reducerPath: "newsApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080/api/v1/news",
+    baseUrl: apiURL,
   }),
   endpoints: (builder) => ({
     getNews: builder.query<NewItem[], void>({
