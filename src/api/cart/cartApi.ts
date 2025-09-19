@@ -63,6 +63,13 @@ export const cartApiBE = apiCartSlice.injectEndpoints({
       }),
       invalidatesTags: ["Cart"],
     }),
+    clearShipping: builder.mutation<void, void>({
+      query: () => ({
+        url: "/cart/clearShip",
+        method: "POST",
+      }),
+      invalidatesTags: ["Cart"],
+    }),
   }),
 });
 
@@ -75,4 +82,5 @@ export const {
   useUpdatePromoMutation,
   useUpdateShippingMutation,
   useClearPromoMutation,
+  useClearShippingMutation,
 } = cartApiBE;

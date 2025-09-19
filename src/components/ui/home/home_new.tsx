@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
 import { Image } from "@heroui/image";
+import { GoDotFill } from "react-icons/go";
 
 import PageHeading from "@/components/ui/page_heading.tsx";
 
@@ -45,7 +46,9 @@ function NewContent(): ReactElement {
             "text-lg lg:text-2xl text-dark-grey-70 flex gap-3 items-center"
           }
         >
-          4 Min <li>August 19, 2022</li>
+          <span>4 Min</span>
+          <GoDotFill />
+          <span>August 19, 2022</span>
         </p>
       </div>
     </div>

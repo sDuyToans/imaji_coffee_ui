@@ -28,6 +28,7 @@ import { usePromo } from "@/context/promo.tsx";
 import {
   useClearCartMutation,
   useClearPromoMutation,
+  useClearShippingMutation,
   useGetCartQuery,
 } from "@/api/cart/cartApi.ts";
 
@@ -61,6 +62,7 @@ export default function Checkout({
   const [clearPromo] = useClearPromoMutation();
   const { setIsOpenCart } = useCart();
   const { openPromoModal } = usePromo();
+  const [clearShip] = useClearShippingMutation();
 
   const [elementErrors, setElementErrors] = useState<ElementErrors>({
     cardNumber: "",
@@ -91,6 +93,15 @@ export default function Checkout({
   });
 
   const { getValues } = methods;
+
+  const handleBackStep = async (targetStep: Step) => {
+    try {
+      await clearShip().unwrap();
+      setStep(targetStep);
+    } catch (e) {
+      console.log("Error in clear shipping", e);
+    }
+  };
 
   const handleNext = async () => {
     if (step === Step.Address) setStep(Step.Shipping);
@@ -184,6 +195,7 @@ export default function Checkout({
         toast.success("Payment successful!");
         clearCart();
         clearPromo();
+        await clearShip().unwrap();
         setIsOpenCart(false);
         navigate(`/completed-checkout/${orderId}`);
       }
@@ -260,7 +272,7 @@ export default function Checkout({
               <PrimaryButton
                 className={"hidden lg:flex"}
                 type={"button"}
-                onPress={() => setStep(Step.Address)}
+                onPress={() => handleBackStep(Step.Address)}
               >
                 <div className={"flex items-center gap-2"}>
                   <GoArrowLeft size={25} />
@@ -272,7 +284,7 @@ export default function Checkout({
               <PrimaryButton
                 className={"hidden lg:flex"}
                 type={"button"}
-                onPress={() => setStep(Step.Shipping)}
+                onPress={() => handleBackStep(Step.Shipping)}
               >
                 <div className={"flex items-center gap-2"}>
                   <GoArrowLeft size={25} />

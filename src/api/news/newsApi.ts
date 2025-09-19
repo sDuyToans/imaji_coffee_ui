@@ -10,7 +10,7 @@ export const newsApi = createApi({
   }),
   endpoints: (builder) => ({
     getNews: builder.query<NewItem[], void>({
-      query: () => "",
+      query: () => "/news",
     }),
     getNewById: builder.query<NewItem, string | number>({
       query: (newId) => `/${newId}`,

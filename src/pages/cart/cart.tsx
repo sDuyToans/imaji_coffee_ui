@@ -8,7 +8,10 @@ import DrawerUI from "@/components/layouts/drawer.tsx";
 import Checkout from "@/pages/checkout/checkout.tsx";
 import PrimaryButton from "@/components/ui/button/primary_button.tsx";
 import { usePromo } from "@/context/promo.tsx";
-import { useGetCartQuery } from "@/api/cart/cartApi.ts";
+import {
+  useClearShippingMutation,
+  useGetCartQuery,
+} from "@/api/cart/cartApi.ts";
 
 export default function Cart({
   onClose,
@@ -17,28 +20,35 @@ export default function Cart({
 }): ReactElement {
   const [isOpenCheckout, setIsOpenCheckout] = useState(false);
   const { isOpenPromoModal, openPromoModal, closePromoModal } = usePromo();
-  const { data } = useGetCartQuery();
+  const { data, refetch } = useGetCartQuery();
+  const [clearShipping] = useClearShippingMutation();
   const cartItems = data?.cartItems ?? [];
+  const handleCloseCheckout = async () => {
+    try {
+      await clearShipping().unwrap();
+      await refetch();
+      setIsOpenCheckout(false);
+    } catch (e) {
+      console.log("There is an error in clear the shipping method", e);
+    }
+  };
 
   return (
     <div>
       <div className={"flex flex-col lg:flex-row gap-8 lg:gap-[48px]"}>
-        <DrawerUI
-          isOpen={isOpenCheckout}
-          onClose={() => setIsOpenCheckout(false)}
-        >
+        <DrawerUI isOpen={isOpenCheckout} onClose={handleCloseCheckout}>
           {cartItems && cartItems.length > 0 ? (
-            <Checkout closeCheckout={() => setIsOpenCheckout(false)} />
+            <Checkout closeCheckout={handleCloseCheckout} />
           ) : (
             <p>There is nothing to display, please order and come back.</p>
           )}
         </DrawerUI>
-        {onClose && <CartLeft onClose={onClose} />}
+        {onClose && <CartLeft onClose={handleCloseCheckout} />}
         {onClose && cartItems && cartItems.length > 0 && (
           <CartSummary
             openPromo={openPromoModal}
             summaryBtnContent={"Checkout"}
-            onClose={onClose}
+            onClose={handleCloseCheckout}
           >
             <PrimaryButton
               className={"w-full bg-primary text-white"}
