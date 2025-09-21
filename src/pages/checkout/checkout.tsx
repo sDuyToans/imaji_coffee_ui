@@ -137,7 +137,10 @@ export default function Checkout({
       const payload: OrderRequest = {
         userId: 1,
         email: getValues("email"),
-        shippingAddress: getValues("shippingAddress"),
+        shippingAddress: {
+          ...getValues("shippingAddress"),
+          isDefault: !!getValues("shippingAddress.isDefault"),
+        },
         totalAmount: total,
         taxAmount: tax ?? 0,
         shippingAmount: shipping ?? 0,

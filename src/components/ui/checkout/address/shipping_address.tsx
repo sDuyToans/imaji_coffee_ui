@@ -125,7 +125,11 @@ export default function ShippingAddress(): ReactElement {
             <ErrorText message={errors.shippingAddress.phoneNumber.message} />
           )}
         </div>
-        <Checkbox color={"primary"} defaultSelected={false}>
+        <Checkbox
+          color={"primary"}
+          defaultSelected={false}
+          {...register("shippingAddress.isDefault")}
+        >
           Set as default address
         </Checkbox>
       </div>

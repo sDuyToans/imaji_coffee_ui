@@ -109,6 +109,7 @@ export interface ShippingAddress {
   street: string;
   apartment?: string;
   phoneNumber: string;
+  isDefault: boolean;
 }
 
 export interface CheckoutItem {

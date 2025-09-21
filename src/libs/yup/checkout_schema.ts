@@ -15,6 +15,7 @@ export const checkoutSchema = yup.object({
       .matches(/^[0-9]+$/, "Phone must be numbers only")
       .min(10, "Must be at least 10 digits")
       .required("Phone Number is required"),
+    isDefault: yup.boolean().notRequired().default(false),
   }),
   shipMethodId: yup
     .number()
