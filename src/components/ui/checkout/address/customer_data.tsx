@@ -3,9 +3,15 @@ import { useFormContext } from "react-hook-form";
 import { Input } from "@heroui/input";
 import { Link } from "react-router-dom";
 import { Checkbox } from "@heroui/checkbox";
+import { jwtDecode } from "jwt-decode";
 
 import ErrorText from "@/components/ui/erros/error_text.tsx";
 import { CheckoutData } from "@/types";
+
+interface TokenPayload {
+  username?: string;
+  sub?: string;
+}
 
 export default function CustomerData(): ReactElement {
   const {
@@ -13,32 +19,59 @@ export default function CustomerData(): ReactElement {
     formState: { errors },
   } = useFormContext<CheckoutData>();
 
+  let email = "";
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    const payload = jwtDecode<TokenPayload>(token);
+
+    email = payload.sub || "";
+  }
+
   return (
     <div className={"flex flex-col gap-6 lg:gap-8"}>
       <h3 className={"text-3xl font-medium"}>Customer Data</h3>
       <div className={"flex flex-col gap-2"}>
         <div className={"flex flex-col gap-1"}>
-          <Input
-            classNames={{
-              inputWrapper: "rounded-none  border border-primary bg-white",
-              input: "rounded-none bg-white",
-            }}
-            label={"Email"}
-            labelPlacement={"outside-top"}
-            placeholder={"Enter mail"}
-            // onChange={(e) => handleEmailChange(e.target.value)}
-            {...register("email")}
-          />
-          {errors.email?.message && (
-            <ErrorText message={errors.email.message} />
+          {email === "" ? (
+            <>
+              <Input
+                classNames={{
+                  inputWrapper: "rounded-none  border border-primary bg-white",
+                  input: "rounded-none bg-white",
+                }}
+                label={"Email"}
+                labelPlacement={"outside-top"}
+                placeholder={"Enter mail"}
+                // onChange={(e) => handleEmailChange(e.target.value)}
+                {...register("email")}
+              />
+              {errors.email?.message && (
+                <ErrorText message={errors.email.message} />
+              )}
+              <p className={"text-dark-grey-70 text-base"}>
+                Already have an account?{" "}
+                <Link className={"text-primary"} to={"/sign-in"}>
+                  Log in
+                </Link>
+              </p>
+            </>
+          ) : (
+            <Input
+              classNames={{
+                inputWrapper: "rounded-none  border border-primary bg-white",
+                input: "rounded-none bg-white",
+              }}
+              label={"Email"}
+              labelPlacement={"outside-top"}
+              placeholder={"Enter mail"}
+              value={email}
+              isDisabled={true}
+              // onChange={(e) => handleEmailChange(e.target.value)}
+              {...register("email")}
+            />
           )}
         </div>
-        <p className={"text-dark-grey-70 text-base"}>
-          Already have an account?{" "}
-          <Link className={"text-primary"} to={"/sign-in"}>
-            Log in
-          </Link>
-        </p>
       </div>
       <Checkbox color={"primary"} defaultSelected={true}>
         Email with news and offer
