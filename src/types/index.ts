@@ -233,3 +233,15 @@ export interface PromoDto {
   discountType: "percentage" | "fixed" | "free_shipping";
   discountValue: number;
 }
+
+export interface AddressResponseDto extends ShippingAddress {
+  userId: number;
+}
+
+export interface AccountOrderResponseDto {
+  orderId: number;
+  createdAt: string;
+  status: string;
+  items: number;
+  amount: number;
+}
