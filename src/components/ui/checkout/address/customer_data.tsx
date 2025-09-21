@@ -66,7 +66,7 @@ export default function CustomerData(): ReactElement {
               labelPlacement={"outside-top"}
               placeholder={"Enter mail"}
               value={email}
-              isDisabled={true}
+              readOnly={true}
               // onChange={(e) => handleEmailChange(e.target.value)}
               {...register("email")}
             />
