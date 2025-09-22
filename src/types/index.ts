@@ -245,3 +245,10 @@ export interface AccountOrderResponseDto {
   items: number;
   amount: number;
 }
+
+export interface UserDto {
+  userId: number;
+  username: string;
+  email: string;
+  phone: string;
+}

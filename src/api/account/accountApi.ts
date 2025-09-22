@@ -3,24 +3,20 @@ import { AddressResponseDto } from "@/types";
 
 export const accountApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
-    getAccount: build.query({
-      query: () => "/account",
-    }),
-    validateToken: build.query({
-      query: () => "/validate",
-    }),
     getAccountOrders: build.query<void, void>({
       query: () => "/account/orders",
     }),
     getAddresses: build.query<AddressResponseDto[], void>({
       query: () => "/account/address",
     }),
+    getUserInfo: build.query<void, void>({
+      query: () => "/account/user",
+    }),
   }),
 });
 
 export const {
-  useGetAccountQuery,
-  useValidateTokenQuery,
   useGetAccountOrdersQuery,
   useGetAddressesQuery,
+  useGetUserInfoQuery,
 } = accountApi;

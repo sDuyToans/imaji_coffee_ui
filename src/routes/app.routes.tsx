@@ -14,6 +14,8 @@ import Login from "@/pages/auth/login.tsx";
 import Register from "@/pages/auth/register.tsx";
 import ProtectedRoute from "@/routes/protectedRoute.tsx";
 import Account from "@/pages/user/account.tsx";
+import AccountAddress from "@/components/ui/account/address/account_address.tsx";
+import AccountSetting from "@/components/ui/account/address/account_setting.tsx";
 
 export default function AppRoutes(): ReactElement {
   return (
@@ -35,7 +37,6 @@ export default function AppRoutes(): ReactElement {
       />
       <Route element={<Login />} path={"/sign-in"} />
       <Route element={<Register />} path={"/register"} />
-
       <Route
         element={
           <ProtectedRoute>
@@ -43,6 +44,22 @@ export default function AppRoutes(): ReactElement {
           </ProtectedRoute>
         }
         path={"/account"}
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <AccountAddress />
+          </ProtectedRoute>
+        }
+        path={"/account/address"}
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <AccountSetting />
+          </ProtectedRoute>
+        }
+        path={"/account/setting"}
       />
       {/*Catch-all unknown routes*/}
       <Route element={<Error />} path={"*"} />
