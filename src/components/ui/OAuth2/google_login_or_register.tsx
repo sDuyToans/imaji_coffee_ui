@@ -2,7 +2,7 @@ import { FcGoogle } from "react-icons/fc";
 
 import PrimaryButton from "@/components/ui/button/primary_button.tsx";
 
-const apiURL = import.meta.env.VITE_API_BASE_URL;
+const apiURL = import.meta.env.VITE_BACKEND_BASE_URL;
 
 export default function GoogleLoginOrRegister({
   content,
