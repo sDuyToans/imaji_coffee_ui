@@ -11,6 +11,9 @@ export default function OrderItemStatus(): ReactElement {
   const { data, isLoading } = useGetAccountOrdersQuery();
 
   if (isLoading) return <Spinner color={"primary"} />;
+  // @ts-ignore
+  if (data && data.length === 0)
+    return <div>Nothing to display. Please made an order and come back</div>;
   const orderList: AccountOrderResponseDto[] = data ?? [];
 
   function renderStatus(status: string): ReactElement {

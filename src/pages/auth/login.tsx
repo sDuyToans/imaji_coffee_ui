@@ -3,7 +3,6 @@ import type { ReactElement } from "react";
 import { Input } from "@heroui/input";
 import { Checkbox } from "@heroui/checkbox";
 import { Link } from "@heroui/link";
-import { FcGoogle } from "react-icons/fc";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +17,7 @@ import { useLoginMutation } from "@/api/auth/authApi.ts";
 import { loginSchema } from "@/libs/yup/login_schema.ts";
 import ErrorText from "@/components/ui/erros/error_text.tsx";
 import { setToken } from "@/features/auth/authSlice.ts";
+import GoogleLoginOrRegister from "@/components/ui/OAuth2/google_login_or_register.tsx";
 
 type LoginFormValues = {
   loginInput: string;
@@ -71,15 +71,7 @@ function LoginContainer(): ReactElement {
         <p className={"text-base md:text-xl"}>
           Enter your credentials to access your account
         </p>
-        <PrimaryButton
-          className={
-            "border-[#717171] w-full text-center flex gap-3 items-center"
-          }
-          type={"button"}
-        >
-          <FcGoogle size={32} />
-          <span>Sign in with Google</span>
-        </PrimaryButton>
+        <GoogleLoginOrRegister content={"Sign in with Google"} />
       </div>
       <div className={"flex items-center justify-center w-full"}>
         <div className={"flex-1 h-[1px] bg-dark-grey-70"} />

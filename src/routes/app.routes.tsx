@@ -16,6 +16,7 @@ import ProtectedRoute from "@/routes/protectedRoute.tsx";
 import Account from "@/pages/user/account.tsx";
 import AccountAddress from "@/components/ui/account/address/account_address.tsx";
 import AccountSetting from "@/components/ui/account/address/account_setting.tsx";
+import AuthCallback from "@/pages/auth/auth_callback.tsx";
 
 export default function AppRoutes(): ReactElement {
   return (
@@ -61,6 +62,8 @@ export default function AppRoutes(): ReactElement {
         }
         path={"/account/setting"}
       />
+
+      <Route element={<AuthCallback />} path={"/auth/callback"} />
       {/*Catch-all unknown routes*/}
       <Route element={<Error />} path={"*"} />
     </Routes>

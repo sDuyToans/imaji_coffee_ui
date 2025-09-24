@@ -1,6 +1,5 @@
 import type { ReactElement } from "react";
 
-import { FcGoogle } from "react-icons/fc";
 import { Input } from "@heroui/input";
 import { Link } from "@heroui/link";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +16,7 @@ import { useSignupMutation } from "@/api/auth/authApi.ts";
 import { signupSchema } from "@/libs/yup/signup_schema.ts";
 import ErrorText from "@/components/ui/erros/error_text.tsx";
 import { setToken } from "@/features/auth/authSlice.ts";
+import GoogleLoginOrRegister from "@/components/ui/OAuth2/google_login_or_register.tsx";
 
 type FormRegisterType = {
   email: string;
@@ -77,15 +77,7 @@ function RegisterContainer(): ReactElement {
         <p className={"text-base md:text-xl"}>
           Create an account to easily shopping
         </p>
-        <PrimaryButton
-          className={
-            "border-[#717171] w-full text-center flex gap-3 items-center"
-          }
-          type={"button"}
-        >
-          <FcGoogle size={32} />
-          <span>Sign up with Google</span>
-        </PrimaryButton>
+        <GoogleLoginOrRegister content={"Sign up with Google"} />
       </div>
       <div className={"flex items-center justify-center w-full"}>
         <div className={"flex-1 h-[1px] bg-dark-grey-70"} />
