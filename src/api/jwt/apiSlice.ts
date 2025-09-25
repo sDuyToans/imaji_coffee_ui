@@ -21,6 +21,7 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery,
   endpoints: () => ({}),
+  tagTypes: ["Orders"],
 });
 
 export const apiCartSlice = createApi({

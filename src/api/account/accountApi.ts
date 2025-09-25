@@ -5,6 +5,7 @@ export const accountApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getAccountOrders: build.query<void, void>({
       query: () => "/account/orders",
+      providesTags: ["Orders"],
     }),
     getAddresses: build.query<AddressResponseDto[], void>({
       query: () => "/account/address",
