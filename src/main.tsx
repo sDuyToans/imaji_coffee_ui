@@ -33,5 +33,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </Elements>
       </Provider>
     </BrowserRouter>
+    , //{" "}
   </React.StrictMode>,
 );

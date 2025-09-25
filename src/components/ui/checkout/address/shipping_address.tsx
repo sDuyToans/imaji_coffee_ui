@@ -1,17 +1,16 @@
 import { ReactElement } from "react";
-import { Controller, useFormContext } from "react-hook-form";
-import { Input } from "@heroui/input";
-import PhoneInput from "react-phone-input-2";
+import { useFormContext } from "react-hook-form";
 import { Checkbox } from "@heroui/checkbox";
 
 import { CheckoutData } from "@/types";
 import ErrorText from "@/components/ui/erros/error_text.tsx";
 import CountrySelect from "@/components/ui/checkout/address/country_select.tsx";
+import CustomInput from "@/components/layouts/form/custom_input.tsx";
+import PhoneInput from "@/components/layouts/form/phone_input.tsx";
 
 export default function ShippingAddress(): ReactElement {
   const {
     register,
-    control,
     formState: { errors },
   } = useFormContext<CheckoutData>();
 
@@ -20,29 +19,11 @@ export default function ShippingAddress(): ReactElement {
       <h3 className={"text-3xl font-medium"}>Shipping Address</h3>
       <div className={"flex flex-col gap-4 lg:gap-6"}>
         <div className={"flex flex-col gap-4 lg:flex-row lg:gap-6"}>
-          <div className={"flex flex-col gap-1"}>
-            <Input
-              classNames={{
-                inputWrapper: "rounded-none  border border-primary bg-white",
-                input: "rounded-none bg-white",
-              }}
-              placeholder={"Name"}
-              {...register("shippingAddress.name")}
-            />
-            {errors.shippingAddress?.name?.message && (
-              <ErrorText message={errors.shippingAddress.name.message} />
-            )}
-          </div>
-          <div className={"flex flex-col gap-1"}>
-            <Input
-              classNames={{
-                inputWrapper: "rounded-none  border border-primary bg-white",
-                input: "rounded-none bg-white",
-              }}
-              placeholder={"Apartment, suite, etc"}
-              {...register("shippingAddress.apartment")}
-            />
-          </div>
+          <CustomInput name={"shippingAddress.name"} placeholder={"Name"} />
+          <CustomInput
+            name={"shippingAddress.apartment"}
+            placeholder={"Apartment, suite, etc"}
+          />
         </div>
         <div className={"grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6"}>
           <div className={"flex flex-col gap-1"}>
@@ -52,79 +33,21 @@ export default function ShippingAddress(): ReactElement {
             )}
           </div>
 
-          <div className={"flex flex-col gap-1"}>
-            <Input
-              classNames={{
-                inputWrapper: "rounded-none  border border-primary bg-white",
-                input: "rounded-none bg-white",
-              }}
-              placeholder={"Province"}
-              {...register("shippingAddress.province")}
-            />
-            {errors.shippingAddress?.province?.message && (
-              <ErrorText message={errors.shippingAddress.province.message} />
-            )}
-          </div>
-
-          <div className={"flex flex-col gap-1"}>
-            <Input
-              classNames={{
-                inputWrapper: "rounded-none  border border-primary bg-white",
-                input: "rounded-none bg-white",
-              }}
-              placeholder={"City"}
-              {...register("shippingAddress.city")}
-            />
-            {errors.shippingAddress?.city?.message && (
-              <ErrorText message={errors.shippingAddress.city.message} />
-            )}
-          </div>
-
-          <div className={"flex flex-col gap-1"}>
-            <Input
-              classNames={{
-                inputWrapper: "rounded-none  border border-primary bg-white",
-                input: "rounded-none bg-white",
-              }}
-              placeholder={"Postal Code"}
-              {...register("shippingAddress.postalCode")}
-            />
-            {errors.shippingAddress?.postalCode?.message && (
-              <ErrorText message={errors.shippingAddress.postalCode.message} />
-            )}
-          </div>
-        </div>
-
-        <div className={"flex flex-col gap-1"}>
-          <Input
-            classNames={{
-              inputWrapper: "rounded-none  border border-primary bg-white",
-              input: "rounded-none bg-white",
-            }}
-            placeholder={"Address detail"}
-            {...register("shippingAddress.street")}
+          <CustomInput
+            name={"shippingAddress.province"}
+            placeholder={"Province"}
           />
-          {errors.shippingAddress?.street?.message && (
-            <ErrorText message={errors.shippingAddress.street.message} />
-          )}
-        </div>
-        <div className={"flex flex-col gap-1"}>
-          <Controller
-            control={control}
-            name={"shippingAddress.phoneNumber"}
-            render={({ field }) => (
-              <PhoneInput
-                country={"ca"}
-                inputStyle={{ width: "100%" }}
-                value={field.value}
-                onChange={(value) => field.onChange(value)}
-              />
-            )}
+
+          <CustomInput name={"shippingAddress.city"} placeholder={"City"} />
+
+          <CustomInput
+            name={"shippingAddress.postalCode"}
+            placeholder={"Postal Code"}
           />
-          {errors.shippingAddress?.phoneNumber?.message && (
-            <ErrorText message={errors.shippingAddress.phoneNumber.message} />
-          )}
         </div>
+
+        <CustomInput name={"shippingAddress.street"} placeholder={"Street"} />
+        <PhoneInput name={"shippingAddress.phoneNumber"} />
         <Checkbox
           color={"primary"}
           defaultSelected={false}

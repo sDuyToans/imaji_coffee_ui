@@ -25,6 +25,7 @@ export default function DrawerUI({
   return (
     <Drawer
       className="!w-[95%] max-w-[95%] rounded-none p-0 z-999"
+      disableAnimation={false}
       hideCloseButton={true}
       isOpen={isOpen}
       placement={placement}

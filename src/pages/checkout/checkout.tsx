@@ -10,6 +10,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import toast from "react-hot-toast";
+import { jwtDecode } from "jwt-decode";
 
 import DrawerHeading from "@/components/ui/drawer_heading.tsx";
 import OrderItemsSummary from "@/components/ui/order/order_items_summary.tsx";
@@ -36,6 +37,11 @@ enum Step {
   Address = 0,
   Shipping = 1,
   Payment = 2,
+}
+
+interface TokenPayload {
+  username?: string;
+  sub?: string;
 }
 
 export default function Checkout({
@@ -69,13 +75,24 @@ export default function Checkout({
     cardExpiry: "",
     cardCVC: "",
   });
+
+  const token = localStorage.getItem("token");
+  let emailFromToken = "";
+
+  if (token) {
+    const payload = jwtDecode<TokenPayload>(token);
+
+    emailFromToken = payload.sub || "";
+  }
   const elements = useElements();
   const stripe = useStripe();
   const methods = useForm({
+    mode: "onBlur", // validate only on Blur not on every key stroke
+    shouldUnregister: false, // unmount fields not needed
     resolver: yupResolver(checkoutSchema),
     defaultValues: {
       userId: null,
-      email: "",
+      email: emailFromToken,
       shipMethodId: 1,
       shippingAddress: {
         name: "",
@@ -92,7 +109,7 @@ export default function Checkout({
     },
   });
 
-  const { getValues } = methods;
+  const { getValues, trigger } = methods;
 
   const handleBackStep = async (targetStep: Step) => {
     try {
@@ -104,8 +121,23 @@ export default function Checkout({
   };
 
   const handleNext = async () => {
-    if (step === Step.Address) setStep(Step.Shipping);
-    else if (step === Step.Shipping) setStep(Step.Payment);
+    if (step === Step.Address) {
+      const isValid = await trigger([
+        "email",
+        "shippingAddress.name",
+        "shippingAddress.phoneNumber",
+        "shippingAddress.street",
+        "shippingAddress.city",
+        "shippingAddress.country",
+        "shippingAddress.postalCode",
+        "shippingAddress.province",
+        "shippingAddress.apartment",
+      ]);
+
+      if (!isValid) return;
+
+      setStep(Step.Shipping);
+    } else if (step === Step.Shipping) setStep(Step.Payment);
     else if (step === Step.Payment) {
       await handlePayment();
     }
@@ -302,7 +334,7 @@ export default function Checkout({
                 className={"w-full bg-primary text-white"}
                 content={"Process to Shipping"}
                 type={"button"}
-                onPress={methods.handleSubmit(() => setStep(Step.Shipping))}
+                onPress={handleNext}
               />
             )}
             {step === Step.Shipping && (

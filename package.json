@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
     "@heroui/accordion": "^2.2.23",
     "@heroui/breadcrumbs": "^2.2.20",
