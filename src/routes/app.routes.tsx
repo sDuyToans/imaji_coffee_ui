@@ -17,6 +17,7 @@ import Account from "@/pages/user/account.tsx";
 import AccountAddress from "@/components/ui/account/address/account_address.tsx";
 import AccountSetting from "@/components/ui/account/address/account_setting.tsx";
 import AuthCallback from "@/pages/auth/auth_callback.tsx";
+import Space from "@/pages/space/space.tsx";
 
 export default function AppRoutes(): ReactElement {
   return (
@@ -64,6 +65,7 @@ export default function AppRoutes(): ReactElement {
       />
 
       <Route element={<AuthCallback />} path={"/auth/callback"} />
+      <Route element={<Space />} path={"/spaces"} />
       {/*Catch-all unknown routes*/}
       <Route element={<Error />} path={"*"} />
     </Routes>
