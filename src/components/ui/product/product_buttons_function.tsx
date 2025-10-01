@@ -22,9 +22,9 @@ export default function ProductButtonsFunction({
     setIsOpen(true);
   };
 
-  const handleBuyNow = () => {
-    console.log("Buy now:", { quantity });
-  };
+  // const handleBuyNow = () => {
+  //   console.log("Buy now:", { quantity });
+  // };
 
   const increase = () => setQuantity((q) => q + 1);
   const decrease = () => setQuantity((q) => Math.max(1, q - 1));
@@ -88,12 +88,12 @@ export default function ProductButtonsFunction({
         </div>
       </div>
       {/* Buy It Now */}
-      <PrimaryButton
-        className={"w-full bg-primary text-white"}
-        content="Buy It Now"
-        type="button"
-        onPress={handleBuyNow}
-      />
+      {/*<PrimaryButton*/}
+      {/*  className={"w-full bg-primary text-white"}*/}
+      {/*  content="Buy It Now"*/}
+      {/*  type="button"*/}
+      {/*  onPress={handleBuyNow}*/}
+      {/*/>*/}
     </div>
   );
 }
