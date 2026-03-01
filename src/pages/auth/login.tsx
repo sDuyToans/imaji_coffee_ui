@@ -16,8 +16,9 @@ import PrimaryButton from "@/components/ui/button/primary_button.tsx";
 import { useLoginMutation } from "@/api/auth/authApi.ts";
 import { loginSchema } from "@/libs/yup/login_schema.ts";
 import ErrorText from "@/components/ui/erros/error_text.tsx";
-import { setToken } from "@/features/auth/authSlice.ts";
 import GoogleLoginOrRegister from "@/components/ui/OAuth2/google_login_or_register.tsx";
+import { setAuthLoading, setUser } from "@/features/auth/authSlice.ts";
+import { useLazyGetMeQuery } from "@/api/account/accountApi.ts";
 
 type LoginFormValues = {
   loginInput: string;
@@ -40,6 +41,8 @@ function LoginContainer(): ReactElement {
   const validationErrors = (errorBE as { data?: Record<string, string> })?.data;
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [triggerMe] = useLazyGetMeQuery();
+
   const {
     register,
     handleSubmit,
@@ -50,13 +53,21 @@ function LoginContainer(): ReactElement {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      const res = await login(data).unwrap();
+      dispatch(setAuthLoading(true));
 
-      dispatch(setToken(res.token));
+      await login(data).unwrap();
+
+      const me = await triggerMe().unwrap();
+
+      console.log("ME:", me);
+
+      dispatch(setUser({ username: me.username }));
       toast.success("Log in successfully");
       navigate("/account");
-    } catch {
-      toast.error("Invalid email or password");
+    } catch (e) {
+      console.log("LOGIN/ME ERROR:", e);
+      dispatch(setAuthLoading(false));
+      toast.error("Login failed");
     }
   };
 

@@ -50,12 +50,11 @@ export default function Checkout({
   closeCheckout: () => void;
 }): ReactElement {
   const [step, setStep] = useState<Step>(Step.Address);
-  const { data } = useGetCartQuery();
-  const cartItems = data?.cartItems ?? [];
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [cardName, setCardName] = useState("");
   const { data: cart } = useGetCartQuery();
+  const cartItems = cart?.cartItems ?? [];
 
   // const subtotal = cart?.subtotal;
   const tax = cart?.tax; // Or backend value if you send tax directly

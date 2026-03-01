@@ -18,6 +18,7 @@ import AccountAddress from "@/components/ui/account/address/account_address.tsx"
 import AccountSetting from "@/components/ui/account/address/account_setting.tsx";
 import AuthCallback from "@/pages/auth/auth_callback.tsx";
 import Space from "@/pages/space/space.tsx";
+import Chat from "@/pages/chat/chat.tsx";
 
 export default function AppRoutes(): ReactElement {
   return (
@@ -62,6 +63,14 @@ export default function AppRoutes(): ReactElement {
           </ProtectedRoute>
         }
         path={"/account/setting"}
+      />
+      <Route
+        element={
+          <ProtectedRoute>
+            <Chat />
+          </ProtectedRoute>
+        }
+        path={"/chat"}
       />
 
       <Route element={<AuthCallback />} path={"/auth/callback"} />

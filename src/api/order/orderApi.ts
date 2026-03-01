@@ -26,6 +26,13 @@ export const orderApi = createApi({
       }),
       invalidatesTags: ["Orders"],
     }),
+    createOrderForPayPal: builder.mutation({
+      query: (orderData) => ({
+        url: "/order/paypal",
+        method: "POST",
+        body: orderData,
+      }),
+    }),
     getOrderById: builder.query({
       query: (orderId) => `/order/${orderId}`,
       providesTags: ["Orders"],
@@ -45,4 +52,5 @@ export const {
   useCreateOrderMutation,
   useGetOrderByIdQuery,
   useUpdateOrderStatusMutation,
+  useCreateOrderForPayPalMutation,
 } = orderApi;

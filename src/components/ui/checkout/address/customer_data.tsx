@@ -3,30 +3,18 @@ import { useFormContext } from "react-hook-form";
 import { Input } from "@heroui/input";
 import { Link } from "react-router-dom";
 import { Checkbox } from "@heroui/checkbox";
-import { jwtDecode } from "jwt-decode";
 
 import ErrorText from "@/components/ui/erros/error_text.tsx";
 import { CheckoutData } from "@/types";
-
-interface TokenPayload {
-  username?: string;
-  sub?: string;
-}
+import { useGetMeQuery } from "@/api/account/accountApi.ts";
 
 export default function CustomerData(): ReactElement {
   const {
     register,
     formState: { errors },
   } = useFormContext<CheckoutData>();
-
-  let email = "";
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    const payload = jwtDecode<TokenPayload>(token);
-
-    email = payload.sub || "";
-  }
+  const { data: myInfo } = useGetMeQuery();
+  let email = myInfo?.email || "";
 
   return (
     <div className={"flex flex-col gap-6 lg:gap-8"}>

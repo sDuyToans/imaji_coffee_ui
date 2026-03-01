@@ -17,7 +17,7 @@ export const productsApi = createApi({
         `${category ? `/products?category${category.toString()}&size=${size}` : `/products?size=${size}`}`,
     }),
     getProductByProductId: builder.query({
-      query: (productId: number) => `/products/detail/${productId}`,
+      query: (productId: number) => `/products/${productId}`,
     }),
     getRelatedProducts: builder.query<
       ProductItem[],

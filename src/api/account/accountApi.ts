@@ -1,5 +1,5 @@
 import { apiSlice } from "@/api/jwt/apiSlice.ts";
-import { AddressResponseDto } from "@/types";
+import { AddressResponseDto, UserInfo } from "@/types";
 
 export const accountApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
@@ -13,6 +13,9 @@ export const accountApi = apiSlice.injectEndpoints({
     getUserInfo: build.query<void, void>({
       query: () => "/account/user",
     }),
+    getMe: build.query<UserInfo, void>({
+      query: () => "/account/me",
+    }),
   }),
 });
 
@@ -20,4 +23,6 @@ export const {
   useGetAccountOrdersQuery,
   useGetAddressesQuery,
   useGetUserInfoQuery,
+  useGetMeQuery,
+  useLazyGetMeQuery,
 } = accountApi;

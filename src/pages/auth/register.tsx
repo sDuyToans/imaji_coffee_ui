@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
 import { Spinner } from "@heroui/spinner";
-import { useDispatch } from "react-redux";
 
 import PrimaryButton from "@/components/ui/button/primary_button.tsx";
 import RightAuth from "@/components/ui/auth/right_auth.tsx";
@@ -15,7 +14,6 @@ import LeftAuthContainer from "@/components/ui/auth/left_auth.tsx";
 import { useSignupMutation } from "@/api/auth/authApi.ts";
 import { signupSchema } from "@/libs/yup/signup_schema.ts";
 import ErrorText from "@/components/ui/erros/error_text.tsx";
-import { setToken } from "@/features/auth/authSlice.ts";
 import GoogleLoginOrRegister from "@/components/ui/OAuth2/google_login_or_register.tsx";
 
 type FormRegisterType = {
@@ -37,7 +35,6 @@ export default function Register(): ReactElement {
 function RegisterContainer(): ReactElement {
   const [signup, { isLoading }] = useSignupMutation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const {
     register,
@@ -49,10 +46,7 @@ function RegisterContainer(): ReactElement {
 
   const onSubmit = async (data: FormRegisterType) => {
     try {
-      const res = await signup(data).unwrap();
-
-      // store token
-      dispatch(setToken(res.token));
+      await signup(data).unwrap();
 
       // success notification
       toast.success("Account created successfully!");

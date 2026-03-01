@@ -12,7 +12,6 @@ import {
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { jwtDecode } from "jwt-decode";
 
 import { siteConfig } from "@/config/site.ts";
 import { ThemeSwitch } from "@/components/theme-switch.tsx";
@@ -22,79 +21,44 @@ import { Icon } from "@/components/layouts/icons.tsx";
 import DrawerUI from "@/components/layouts/drawer.tsx";
 import Cart from "@/pages/cart/cart.tsx";
 import { useCart } from "@/context/cart.tsx";
-import { logout } from "@/features/auth/authSlice.ts";
-import { useGetCartQuery } from "@/api/cart/cartApi.ts";
+import { clearUser } from "@/features/auth/authSlice.ts";
+import { cartApiBE, useGetCartQuery } from "@/api/cart/cartApi.ts";
+import { useGetMeQuery } from "@/api/account/accountApi.ts";
+import { useLogoutMutation } from "@/api/auth/authApi.ts";
+import { apiSlice } from "@/api/jwt/apiSlice.ts";
+import AuthButtons from "@/components/layouts/auth-buttons.tsx";
 
-interface TokenPayload {
-  username?: string;
-  sub?: string;
-}
-
-function getUsernameFromToken(): string | null {
-  const token = localStorage.getItem("token");
-
-  if (!token) return null;
-
-  try {
-    const payload = jwtDecode<TokenPayload>(token);
-
-    return payload.username || payload.sub || null;
-  } catch {
-    return null;
-  }
-}
-
-function AuthButtons({
-  isLoggedIn,
-  username,
-  onLogout,
-}: {
-  isLoggedIn: boolean;
-  username: string | null;
-  onLogout: () => void;
-}) {
-  return isLoggedIn ? (
-    <>
-      <NavbarItem>
-        <span className="text-black px-4">
-          <Link href={"/account"}>Hi, {username}</Link>
-        </span>
-      </NavbarItem>
-      <NavbarItem>
-        <button
-          className="flex items-center justify-center text-base dark:bg-primary dark:text-black dark:hover:text-white transition text-primary px-4 py-3 border border-primary hover:cursor-pointer w-[85px] h-[45px] text-center"
-          onClick={onLogout}
-        >
-          Logout
-        </button>
-      </NavbarItem>
-    </>
-  ) : (
-    <NavbarItem>
-      <Link href="/sign-in">
-        <button className="flex items-center justify-center text-base dark:bg-primary dark:text-black dark:hover:text-white transition text-primary px-4 py-3 border border-primary hover:cursor-pointer w-[85px] h-[45px] text-center">
-          <span>Sign In</span>
-        </button>
-      </Link>
-    </NavbarItem>
-  );
-}
-
+/**
+ * @author duytoan
+ * @since 08/2025
+ */
 export function Navbar(): ReactElement {
   const { data: cart } = useGetCartQuery();
+  const { data: myInfo } = useGetMeQuery();
 
   let cartCount: number =
     cart?.cartItems?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
   const { isOpenCart, setIsOpenCart } = useCart();
-  const dispatch = useDispatch();
+  const [logoutApi] = useLogoutMutation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const username = getUsernameFromToken();
+  const username = myInfo?.username;
   const isLoggedIn = !!username;
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/sign-in");
+  const handleLogout = async () => {
+    try {
+      await logoutApi().unwrap();
+    } catch {
+      console.log("Error when logging out");
+    }
+
+    dispatch(clearUser());
+
+    dispatch(apiSlice.util.resetApiState());
+    dispatch(cartApiBE.util.resetApiState());
+
+    navigate("/sign-in", { replace: true });
   };
 
   return (
@@ -145,7 +109,7 @@ export function Navbar(): ReactElement {
           {/* Auth Buttons */}
           <AuthButtons
             isLoggedIn={isLoggedIn}
-            username={username}
+            username={username ? username : ""}
             onLogout={handleLogout}
           />
 
@@ -211,7 +175,7 @@ export function Navbar(): ReactElement {
         <div className="flex flex-col justify-center items-center gap-8">
           <AuthButtons
             isLoggedIn={isLoggedIn}
-            username={username}
+            username={username ? username : ""}
             onLogout={handleLogout}
           />
         </div>

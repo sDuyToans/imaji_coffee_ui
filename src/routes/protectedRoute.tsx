@@ -1,36 +1,41 @@
-import { JSX, ReactElement } from "react";
+import { JSX, ReactElement, useEffect, useState } from "react";
+import { Spinner } from "@heroui/spinner";
 import { Navigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+
+import { LoginStatus } from "@/utils/enums/EnumsType.ts";
 
 interface ProtectedRouteProps {
   children: JSX.Element;
 }
 
-interface TokenPayload {
-  exp: number;
-}
-
+/**
+ * @author duytoan
+ * @since 10/2025
+ * @param children
+ * @return children elements if the user logged in
+ */
 export default function ProtectedRoute({
   children,
 }: ProtectedRouteProps): ReactElement {
-  const token = localStorage.getItem("token");
+  const [status, setStatus] = useState<LoginStatus>(LoginStatus.LOADING);
 
-  if (!token) return <Navigate replace={true} to={"/sign-in"} />;
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("http://localhost:8080/api/v1/account/me", {
+          credentials: "include",
+        });
 
-  try {
-    const { exp } = jwtDecode<TokenPayload>(token);
+        setStatus(res.ok ? LoginStatus.OK : LoginStatus.FAIL);
+      } catch {
+        setStatus(LoginStatus.FAIL);
+      }
+    })();
+  }, []);
 
-    // if expired, redirect to sign in
-    if (Date.now() >= exp * 1000) {
-      localStorage.removeItem("token");
-
-      return <Navigate replace={true} to={"/sign-in"} />;
-    }
-  } catch (e) {
-    localStorage.removeItem("token");
-
+  if (status == LoginStatus.LOADING) return <Spinner color={"primary"} />;
+  if (status == LoginStatus.FAIL)
     return <Navigate replace={true} to={"/sign-in"} />;
-  }
 
   return children;
 }

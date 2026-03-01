@@ -3,6 +3,7 @@ import { useFormContext } from "react-hook-form";
 
 import StripeCheckout from "@/components/ui/checkout/checkout_method/stripe_checkout.tsx";
 import { CheckoutData, StripeCheckoutProps } from "@/types";
+import PaypalCheckout from "@/components/ui/checkout/checkout_method/paypal_checkout.tsx";
 
 export default function PaymentMethod({
   elementErrors,
@@ -59,6 +60,7 @@ export default function PaymentMethod({
             <Radio value="paypal" />
             <span className="text-lg font-medium">Paypal</span>
           </div>
+          {paymentMethod === "paypal" && <PaypalCheckout />}
         </div>
 
         {/* COD */}

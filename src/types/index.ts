@@ -252,3 +252,9 @@ export interface UserDto {
   email: string;
   phone: string;
 }
+
+export interface UserInfo {
+  username: string;
+  email: string;
+  roles: string;
+}
