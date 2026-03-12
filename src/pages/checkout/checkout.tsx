@@ -10,7 +10,6 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import toast from "react-hot-toast";
-import { jwtDecode } from "jwt-decode";
 
 import DrawerHeading from "@/components/ui/drawer_heading.tsx";
 import OrderItemsSummary from "@/components/ui/order/order_items_summary.tsx";
@@ -32,16 +31,12 @@ import {
   useClearShippingMutation,
   useGetCartQuery,
 } from "@/api/cart/cartApi.ts";
+import { useGetMeQuery } from "@/api/account/accountApi.ts";
 
 enum Step {
   Address = 0,
   Shipping = 1,
   Payment = 2,
-}
-
-interface TokenPayload {
-  username?: string;
-  sub?: string;
 }
 
 export default function Checkout({
@@ -68,6 +63,7 @@ export default function Checkout({
   const { setIsOpenCart } = useCart();
   const { openPromoModal } = usePromo();
   const [clearShip] = useClearShippingMutation();
+  const { data: userInfo } = useGetMeQuery();
 
   const [elementErrors, setElementErrors] = useState<ElementErrors>({
     cardNumber: "",
@@ -75,14 +71,8 @@ export default function Checkout({
     cardCVC: "",
   });
 
-  const token = localStorage.getItem("token");
-  let emailFromToken = "";
+  let email = userInfo?.email || "";
 
-  if (token) {
-    const payload = jwtDecode<TokenPayload>(token);
-
-    emailFromToken = payload.sub || "";
-  }
   const elements = useElements();
   const stripe = useStripe();
   const methods = useForm({
@@ -91,7 +81,7 @@ export default function Checkout({
     resolver: yupResolver(checkoutSchema),
     defaultValues: {
       userId: null,
-      email: emailFromToken,
+      email: email,
       shipMethodId: 1,
       shippingAddress: {
         name: "",

@@ -1,7 +1,6 @@
-import { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { Input } from "@heroui/input";
 import { Spinner } from "@heroui/spinner";
 
 import DefaultLayout from "@/layouts/default.tsx";
@@ -9,6 +8,18 @@ import AccountHeader from "@/components/ui/account/account_header.tsx";
 import PrimaryButton from "@/components/ui/button/primary_button.tsx";
 import { useGetUserInfoQuery } from "@/api/account/accountApi.ts";
 import { UserDto } from "@/types";
+import Input_custom_with_type from "@/components/ui/custom/input_custom_with_type.tsx";
+import { INPUT_TYPES } from "@/utils/enums/EnumsType.ts";
+
+type InitialPasswordForm = {
+  password: string;
+  new_password: string;
+};
+
+const initialPasswordForm = {
+  password: "",
+  new_password: "",
+};
 
 export default function AccountSetting(): ReactElement {
   return (
@@ -51,6 +62,16 @@ function AccountSettingContent(): ReactElement {
 
 function SettingForm(): ReactElement {
   const { data, isLoading } = useGetUserInfoQuery();
+  const [passwordForm, setPasswordForm] = useState(initialPasswordForm);
+
+  const onChangePasswordForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setPasswordForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   if (isLoading) return <Spinner color={"primary"} />;
 
@@ -62,31 +83,36 @@ function SettingForm(): ReactElement {
   };
 
   return (
-    <form
+    <div
       className={
         "border border-light-grey-40 p-6 lg:p-8 flex flex-col gap-6 lg:w-[570px] w-full"
       }
     >
       <div>
-        <Input
-          classNames={{
-            inputWrapper: "rounded-none  border border-primary bg-white",
-            input: "rounded-none bg-white",
-          }}
+        <Input_custom_with_type
+          input_type={INPUT_TYPES.TEXT}
           label={"Name"}
-          labelPlacement={"outside-top"}
+          name={"username"}
+          on_change={() => {}}
           value={userInfo.username}
         />
       </div>
       <div>
-        <Input
-          classNames={{
-            inputWrapper: "rounded-none  border border-primary bg-white",
-            input: "rounded-none bg-white",
-          }}
+        <Input_custom_with_type
+          input_type={INPUT_TYPES.TEXT}
           label={"Email"}
-          labelPlacement={"outside-top"}
+          name={"email"}
+          on_change={() => {}}
           value={userInfo.email}
+        />
+      </div>
+      <div>
+        <Input_custom_with_type
+          input_type={INPUT_TYPES.TEXT}
+          label={"Phone Number"}
+          name={"phone"}
+          on_change={() => {}}
+          value={userInfo.phone}
         />
       </div>
       <div className={"flex items-center justify-center w-full"}>
@@ -100,28 +126,42 @@ function SettingForm(): ReactElement {
         </p>
         <div className={"flex-1 h-[1px] bg-dark-grey-70"} />
       </div>
-      <div>
-        <Input
-          classNames={{
-            inputWrapper: "rounded-none  border border-primary bg-white",
-            input: "rounded-none bg-white",
-          }}
+      <UpdatePassword
+        passwordForm={passwordForm}
+        onChangePasswordForm={onChangePasswordForm}
+      />
+    </div>
+  );
+}
+
+type UpdatePasswordProp = {
+  onChangePasswordForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  passwordForm: InitialPasswordForm;
+};
+
+function UpdatePassword(props: UpdatePasswordProp): React.ReactElement {
+  const { onChangePasswordForm, passwordForm } = props;
+
+  return (
+    <form>
+      <div className={"mb-3"}>
+        <Input_custom_with_type
+          input_type={INPUT_TYPES.PASSWORD}
           label={"Password"}
-          labelPlacement={"outside-top"}
-          placeholder={"Enter password"}
-          type={"password"}
+          name={"password"}
+          on_change={onChangePasswordForm}
+          placeHolder={"Enter password"}
+          value={passwordForm.password}
         />
       </div>
-      <div>
-        <Input
-          classNames={{
-            inputWrapper: "rounded-none  border border-primary bg-white",
-            input: "rounded-none bg-white",
-          }}
+      <div className={"mb-6"}>
+        <Input_custom_with_type
+          input_type={INPUT_TYPES.PASSWORD}
           label={"New Password"}
-          labelPlacement={"outside-top"}
-          placeholder={"Enter password"}
-          type={"password"}
+          name={"new_password"}
+          on_change={onChangePasswordForm}
+          placeHolder={"Enter password"}
+          value={passwordForm.new_password}
         />
       </div>
       <PrimaryButton className={"bg-primary text-white w-full"} type={"submit"}>

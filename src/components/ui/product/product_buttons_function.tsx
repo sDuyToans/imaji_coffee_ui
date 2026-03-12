@@ -1,4 +1,5 @@
 import { ReactElement, useState } from "react";
+import toast from "react-hot-toast";
 
 import PrimaryButton from "@/components/ui/button/primary_button.tsx";
 import { ProductItem } from "@/types";
@@ -11,25 +12,53 @@ export default function ProductButtonsFunction({
 }: {
   product: ProductItem;
 }): ReactElement {
-  const [quantity, setQuantity] = useState(1);
+  const [quant, setQuantity] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
   const [addToCart] = useAddToCartMutation();
 
   const handleAddToCart = () => {
-    console.log(quantity);
+    // console.log(quantity);
 
-    addToCart({ productId: product.productId, quantity: quantity });
+    addToCart({ productId: product.productId, quantity: quant });
     setIsOpen(true);
   };
-
   // const handleBuyNow = () => {
   //   console.log("Buy now:", { quantity });
   // };
 
-  const increase = () => setQuantity((q) => q + 1);
+  const increase = () => {
+    if (quant + 1 > product.quantity) {
+      // display an error box
+      toast.error(
+        "There are only " +
+          product.quantity +
+          " left for this product in the store!",
+      );
+    } else {
+      setQuantity((q) => q + 1);
+    }
+  };
   const decrease = () => setQuantity((q) => Math.max(1, q - 1));
 
   const { setIsOpenCart } = useCart();
+
+  function handleQuantityChange(value: string): void {
+    let val: number = Number(value);
+
+    if (val > product.quantity) {
+      // display an error box
+      toast.error(
+        "There are only " +
+          product.quantity +
+          " left for this product in the store!",
+      );
+    } else if (val <= 0) {
+      // error box
+      toast.error("Quantity need to be greater than 0");
+    } else {
+      setQuantity(val);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4 items-center">
@@ -72,12 +101,18 @@ export default function ProductButtonsFunction({
           >
             <button
               className="px-3 py-2 text-lg cursor-pointer"
-              disabled={quantity === 1}
+              disabled={quant === 1}
               onClick={decrease}
             >
               −
             </button>
-            <span className="px-4 py-2">{quantity}</span>
+            <input
+              className="w-1/2 text-center focus:outline-none"
+              id={"product_quantity"}
+              type={"number"}
+              value={quant}
+              onChange={(e) => handleQuantityChange(e.target.value)}
+            />
             <button
               className="px-3 py-2 text-lg cursor-pointer"
               onClick={increase}
