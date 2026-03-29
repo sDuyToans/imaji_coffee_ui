@@ -6,11 +6,18 @@ import { imageItem, ProductItem } from "@/types";
 import ProductDescription from "@/components/ui/product/product_description.tsx";
 import ProductButtonsFunction from "@/components/ui/product/product_buttons_function.tsx";
 
+/**
+ * Detail component to display the detail of a product
+ * @author duytoan
+ * @since Mar 05 2026
+ * @param product
+ * @constructor
+ */
 export default function Detail({
   product,
-}: {
+}: Readonly<{
   product: ProductItem;
-}): ReactElement {
+}>): ReactElement {
   const { name, price, oldPrice, description, images } = product;
   const [heroImg, setHeroImg] = useState(images[0].imageUrl);
 
