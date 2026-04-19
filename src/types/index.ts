@@ -258,3 +258,9 @@ export interface UserInfo {
   email: string;
   roles: string;
 }
+
+export interface ChatMessage {
+  senderName: string;
+  senderType: "USER" | "ADMIN";
+  content: string;
+}

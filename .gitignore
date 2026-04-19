@@ -7,49 +7,32 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build output
 dist
 dist-ssr
-*.local
+.flowbite-react/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Environment variables
+# Local env files
 .env
 .env.local
 .env.*.local
+*.local
 
-# Build outputs
-.flowbite-react/
-
-# IDE
-.idea/
-.vscode/
+# Editor / IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Optional npm cache directory
+# Cache
 .npm
-
-# Optional eslint cache
 .eslintcache
 
-# Output of the go coverage tool
+# Other
 *.out
-
-# Dependency directories
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-

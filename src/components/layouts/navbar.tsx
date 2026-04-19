@@ -109,7 +109,7 @@ export function Navbar(): ReactElement {
           {/* Auth Buttons */}
           <AuthButtons
             isLoggedIn={isLoggedIn}
-            username={username ? username : ""}
+            username={username || ""}
             onLogout={handleLogout}
           />
 
@@ -175,7 +175,7 @@ export function Navbar(): ReactElement {
         <div className="flex flex-col justify-center items-center gap-8">
           <AuthButtons
             isLoggedIn={isLoggedIn}
-            username={username ? username : ""}
+            username={username || ""}
             onLogout={handleLogout}
           />
         </div>

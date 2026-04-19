@@ -43,7 +43,7 @@
     "@react-aria/visually-hidden": "3.8.26",
     "@react-types/shared": "3.31.0",
     "@reduxjs/toolkit": "^2.8.2",
-    "@stomp/stompjs": "^7.2.1",
+    "@stomp/stompjs": "^7.3.0",
     "@stripe/react-stripe-js": "^4.0.0",
     "@stripe/stripe-js": "^7.9.0",
     "@tailwindcss/postcss": "4.1.11",

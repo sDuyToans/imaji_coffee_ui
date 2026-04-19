@@ -64,14 +64,16 @@ export default function AppRoutes(): ReactElement {
         }
         path={"/account/setting"}
       />
-      <Route
-        element={
-          <ProtectedRoute>
-            <Chat />
-          </ProtectedRoute>
-        }
-        path={"/chat"}
-      />
+      {/*<Route*/}
+      {/*  element={*/}
+      {/*    <ProtectedRoute>*/}
+      {/*      <Chat />*/}
+      {/*    </ProtectedRoute>*/}
+      {/*  }*/}
+      {/*  path={"/chat"}*/}
+      {/*/>*/}
+
+      <Route element={<Chat />} path={"/chat"} />
 
       <Route element={<AuthCallback />} path={"/auth/callback"} />
       <Route element={<Space />} path={"/spaces"} />
