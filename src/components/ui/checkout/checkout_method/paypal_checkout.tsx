@@ -127,8 +127,6 @@ function PaymentContainer(): React.ReactElement {
       })),
     };
 
-    console.log(payload);
-
     // create order here, but the back end is for using Stripe,  we'll need to modify it a bit
     await createOrderForPayPal(payload).unwrap();
 
@@ -144,9 +142,7 @@ function PaymentContainer(): React.ReactElement {
   };
 
   // on Approve Order Paypal
-  const onApproveOrder = async (data: any, actions: any) => {
-    console.log(data);
-
+  const onApproveOrder = async (data: any) => {
     // update order status
     await updateOrderStatus({ orderId: data.orderID, status: "PAID" });
 
@@ -177,7 +173,7 @@ function PaymentContainer(): React.ReactElement {
         className={"w-1/4"}
         createOrder={(data, actions) => onCreateOrder(data, actions)}
         style={{ layout: "vertical" }}
-        onApprove={(data, actions) => onApproveOrder(data, actions)}
+        onApprove={(data) => onApproveOrder(data)}
       />
     </div>
   );
