@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import {
+  DISPATCH_ACTION,
+  PayPalButtons,
+  usePayPalScriptReducer,
+} from "@paypal/react-paypal-js";
 import { Spinner } from "@heroui/spinner";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,6 +24,7 @@ import {
   useCreateOrderForPayPalMutation,
   useUpdateOrderStatusMutation,
 } from "@/api/order/orderApi.ts";
+
 interface TokenPayload {
   username?: string;
   sub?: string;
@@ -79,7 +84,6 @@ function PaymentContainer(): React.ReactElement {
 
   const { getValues } = methods;
 
-  // const subtotal = cart?.subtotal;
   const tax = cart?.tax; // Or backend value if you send tax directly
   const total: number = cart?.total || 0;
   const shipping = cart?.shipping;
@@ -93,7 +97,7 @@ function PaymentContainer(): React.ReactElement {
   }) => {
     setCurrency(value);
     dispatch({
-      type: "resetOptions",
+      type: DISPATCH_ACTION.RESET_OPTIONS,
       value: {
         ...options,
         currency: currency,
@@ -142,8 +146,6 @@ function PaymentContainer(): React.ReactElement {
   // on Approve Order Paypal
   const onApproveOrder = async (data: any, actions: any) => {
     console.log(data);
-
-    const details = actions.order.capture();
 
     // update order status
     await updateOrderStatus({ orderId: data.orderID, status: "PAID" });
