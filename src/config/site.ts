@@ -8,5 +8,6 @@ export const siteConfig = {
     { id: 3, label: "Space", href: "/spaces" },
     { id: 4, label: "Community", href: "/community" },
     { id: 5, label: "News", href: "/news" },
+    { id: 6, label: "Chat", href: "/chat" },
   ],
 };

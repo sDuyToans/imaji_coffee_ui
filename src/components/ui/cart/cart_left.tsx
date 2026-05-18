@@ -26,7 +26,7 @@ export default function CartLeft({
     >
       {items && items.length > 0 ? (
         <>
-          <DrawerHeading heading={"My Cart"} />
+          <DrawerHeading heading={"My Cart"} onClose={() => setIsOpenCart(false)} />
           <CartItems items={items} />
           <PrimaryButton
             className={"hidden lg:flex"}

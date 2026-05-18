@@ -26,9 +26,10 @@ export default function DrawerUI({
     <Drawer
       className="!w-[95%] max-w-[95%] rounded-none p-0 z-999"
       disableAnimation={false}
-      hideCloseButton={true}
+      hideCloseButton={false}
       isOpen={isOpen}
       placement={placement}
+      onClose={onClose}
       onOpenChange={onClose}
     >
       <DrawerContent className={"z-999"}>

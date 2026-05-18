@@ -77,13 +77,68 @@ export default function MenuList({
         </div>
 
         {/* Load More */}
-        <div className="w-full flex justify-center items-center">
+        <div className="w-full flex flex-col items-center gap-4">
+          {products.length > 0 && (
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Showing {products.length} of {totalElements} products
+            </p>
+          )}
           {products.length < totalElements && (
-            <PrimaryButton
-              content={isFetching ? "Loading..." : "Load More"}
+            <button
+              className="group relative px-8 py-3 border border-primary dark:border-white overflow-hidden transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              disabled={isFetching}
               type="button"
-              onPress={handleLoadMore}
-            />
+              onClick={handleLoadMore}
+            >
+              <span
+                className={`absolute inset-0 bg-primary dark:bg-white transition-transform duration-300 ${
+                  isFetching ? "translate-y-0" : "translate-y-full group-hover:translate-y-0"
+                }`}
+              />
+              <span className="relative flex items-center gap-2 text-primary dark:text-white group-hover:text-white dark:group-hover:text-gray-900 transition-colors duration-300">
+                {isFetching ? (
+                  <>
+                    <svg
+                      className="animate-spin h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    Load More
+                    <svg
+                      className="w-4 h-4 transition-transform group-hover:translate-y-0.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M19 9l-7 7-7-7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
+                    </svg>
+                  </>
+                )}
+              </span>
+            </button>
           )}
         </div>
       </div>

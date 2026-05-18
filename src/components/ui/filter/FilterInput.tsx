@@ -16,10 +16,10 @@ export default function FilterInput({
   return (
     <div className="flex flex-col gap-[8px] flex-1">
       <div className="flex justify-between text-base items-center">
-        <span>{label}</span>
+        <span className="font-medium">{label}</span>
         {value && (
           <button
-            className="text-[#F14C35] cursor-pointer"
+            className="text-sm text-primary dark:text-white hover:underline transition-all"
             onClick={() => onChange("")}
           >
             Clear
@@ -27,9 +27,12 @@ export default function FilterInput({
         )}
       </div>
       <Input
-        classNames={{ inputWrapper: "rounded-none", input: "rounded-none" }}
-        placeholder="Enter keyword"
-        startContent={<CiSearch />}
+        classNames={{
+          inputWrapper: "rounded-none bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700",
+          input: "rounded-none"
+        }}
+        placeholder="Search products..."
+        startContent={<CiSearch className="text-gray-400" />}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}

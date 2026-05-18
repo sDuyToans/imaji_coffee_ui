@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Spinner } from "@heroui/spinner";
 
@@ -15,21 +15,34 @@ export default function Product(): ReactElement {
     error,
   } = useGetProductByProductIdQuery(Number(productId));
 
+  // Scroll to top when page loads
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [productId]);
+
   if (isLoading) {
     return (
       <DefaultLayout>
-        <Spinner color={"primary"} />
+        <div className="flex justify-center items-center min-h-[400px]">
+          <Spinner color={"primary"} />
+        </div>
       </DefaultLayout>
     );
   }
 
-  if (error) {
-    return <DefaultLayout>Failed to load product</DefaultLayout>;
+  if (error || !product) {
+    return (
+      <DefaultLayout>
+        <div className="flex justify-center items-center min-h-[400px]">
+          <p>Failed to load product</p>
+        </div>
+      </DefaultLayout>
+    );
   }
 
   return (
     <DefaultLayout>
-      <div className={"px-5 lg:px-[124px]"}>
+      <div className="px-5 lg:px-[124px]">
         <Detail product={product} />
       </div>
       <MayInterest category={product.category} excludedId={product.productId} />

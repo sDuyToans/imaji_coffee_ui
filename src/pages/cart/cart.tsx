@@ -23,7 +23,7 @@ export default function Cart({
   const { data, refetch } = useGetCartQuery();
   const [clearShipping] = useClearShippingMutation();
   const cartItems = data?.cartItems ?? [];
-  const handleCloseCheckout = async () => {
+  const handleBackToCart = async () => {
     try {
       await clearShipping().unwrap();
       await refetch();
@@ -33,22 +33,36 @@ export default function Cart({
     }
   };
 
+  const handleCloseCheckoutCompletely = async () => {
+    try {
+      await clearShipping().unwrap();
+      await refetch();
+      setIsOpenCheckout(false);
+      // Close the entire cart drawer
+      if (onClose) {
+        onClose();
+      }
+    } catch (e) {
+      console.log("There is an error in clear the shipping method", e);
+    }
+  };
+
   return (
     <div>
       <div className={"flex flex-col lg:flex-row gap-8 lg:gap-[48px]"}>
-        <DrawerUI isOpen={isOpenCheckout} onClose={handleCloseCheckout}>
+        <DrawerUI isOpen={isOpenCheckout} onClose={handleCloseCheckoutCompletely}>
           {cartItems && cartItems.length > 0 ? (
-            <Checkout closeCheckout={handleCloseCheckout} />
+            <Checkout closeCheckout={handleBackToCart} />
           ) : (
             <p>There is nothing to display, please order and come back.</p>
           )}
         </DrawerUI>
-        {onClose && <CartLeft onClose={handleCloseCheckout} />}
+        {onClose && <CartLeft onClose={onClose} />}
         {onClose && cartItems && cartItems.length > 0 && (
           <CartSummary
             openPromo={openPromoModal}
             summaryBtnContent={"Checkout"}
-            onClose={handleCloseCheckout}
+            onClose={handleBackToCart}
           >
             <PrimaryButton
               className={"w-full bg-primary text-white"}

@@ -261,7 +261,7 @@ export default function Checkout({
               "lg:pt-[80px] lg:pb-[48px] flex flex-col gap-6 lg:gap-[48px] flex-4/5 pt-6  lg:px-[80px] px-5"
             }
           >
-            <DrawerHeading heading={"Checkout"} />
+            <DrawerHeading heading={"Checkout"} onClose={closeCheckout} />
             <div>
               <Breadcrumbs>
                 <BreadcrumbItem isCurrent={step === Step.Address}>

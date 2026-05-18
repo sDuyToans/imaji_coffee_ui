@@ -7,36 +7,50 @@ import { NewItem } from "@/types";
 import { formatDate } from "@/utils/formatDate.ts";
 
 interface Props {
-  newItem: NewItem;
+  readonly newItem: NewItem;
 }
 
-export default function NewItemCard(props: Props): ReactElement {
-  const { newItem } = props;
+/**
+ * @author duytoan
+ * @since 05/2026
+ */
+export default function NewItemCard({
+  newItem,
+}: Readonly<Props>): ReactElement {
   const { newId, title, image, createdAt, time } = newItem;
 
-  let created_date: string = formatDate(createdAt);
+  const created_date: string = formatDate(createdAt);
 
   return (
     <Link
-      className={
-        "flex flex-col items-center justify-center gap-5 md:flex-row lg:gap-[48px] py-5 lg:py-8"
-      }
+      className="group flex flex-col md:flex-row gap-6 lg:gap-8 py-8 lg:py-10 transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-900 px-4"
       to={`/news/${newId}`}
     >
-      <Image
-        alt={title}
-        className={
-          "rounded-none w-[350px] h-[200px] md:w-[260px] flex-1 object-cover"
-        }
-        src={image}
-      />
-      <div className={"flex flex-col gap-3 lg:gap-4 flex-1"}>
-        <p className={"text-4xl lg:text-5xl"}>{title}</p>
-        <p className={"text-2xl text-dark-grey-70 flex gap-2 items-center"}>
+      {/* Image Container */}
+      <div className="flex-shrink-0 w-full md:w-[360px] lg:w-[420px] h-[240px] md:h-[220px] lg:h-[240px] overflow-hidden">
+        <Image
+          alt={title}
+          classNames={{
+            wrapper: "w-full h-full",
+            img: "w-full h-full object-cover group-hover:opacity-90 transition-opacity duration-300"
+          }}
+          src={image}
+        />
+      </div>
+
+      {/* Content Container */}
+      <div className="flex flex-col gap-3 lg:gap-4 flex-1 justify-center">
+        {/* Title */}
+        <h3 className="text-2xl md:text-3xl lg:text-4xl font-medium leading-tight text-gray-900 dark:text-white">
+          {title}
+        </h3>
+
+        {/* Meta Information */}
+        <div className="flex gap-3 items-center text-sm lg:text-base text-gray-600 dark:text-gray-400">
           <span>{time}</span>
-          <GoDotFill />
+          <GoDotFill className="text-xs" />
           <span>{created_date}</span>
-        </p>
+        </div>
       </div>
     </Link>
   );
